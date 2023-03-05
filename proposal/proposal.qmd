@@ -1,5 +1,5 @@
 ---
-title: "Proposal for is415 Project"
+title: "Project Proposal"
 ---
 
 ## Spatial analysis of Airbnb listings in Beijing: A pre and post COVID-19 comparison
@@ -28,14 +28,18 @@ Additionally, **Emerging Hot Spot Analysis** can be conducted to determine how h
 
 ## Related Works
 
-1.  Investigates how Beijing's airbnb apartments are affecting housing prices in the region with the use of a machine learning model to analyse price sensitivity as a result of increasing airbnb activities in Beijing. It provides policy recommendations on regulating short-term rental businesses based on a neighbourhood's price sensitivity.
-    -   https://filipbiljecki.com/publications/2019_sdsc_airbnb_beijing.pdf Li, J. I. A. L. I. N., & Biljecki, F. I. L. I. P. (2019). The implementation of big data analysis in regulating online short-term rental business: a case of Airbnb in Beijing. ISPRS Annals of the Photogrammetry, Remote Sensing and Spatial Information Sciences, 4, 79-86.
-2.  This paper investigates the locational factors affecting airbnb listings in beijing and aims to verify a hedonic pricing theory - a model that states both internal and external characteristics and factors determines an item's price in the market - using spatial econometrics models on airbnb apartments. It aims to determine if the price of airbnb apartments are dependent on location, and quantify the effects of proximity to amenities like city centres, tourist attractions and transport facilities.
-    -   <https://ecommons.cornell.edu/handle/1813/103153> Guo, X. (2020, August 1). The value of location for Airbnb Apartments: A hedonic analysis of Airbnb listing price in Beijing. Home Page. Retrieved March 5, 2023, from https://doi.org/10.7298/6s0s-zt49
+1.  <a href="https://filipbiljecki.com/publications/2019_sdsc_airbnb_beijing.pdf"> The Implementation of Big Data Analysis In Regulating Online Short-term Rental Business: A Case of Airbnb in Beijing </a>
+    -   This paper investigates how Beijing's Airbnb apartments are affecting housing prices in the region with the use of a machine learning model to analyse price sensitivity as a result of increasing Airbnb activities in Beijing. It provides policy recommendations on regulating short-term rental businesses based on a neighbourhood's price sensitivity.
+2.  <a href="https://ecommons.cornell.edu/handle/1813/103153">The Value of Location for Airbnb Apartments: A Hedonic Analysis of Airbnb Listing Price in Beijing </a>
+    -   This paper investigates the locational factors affecting Airbnb listings in Beijing and aims to verify a hedonic pricing theory - a model that states both internal and external characteristics and factors determines an item's price in the market - using spatial econometrics models on Airbnb apartments. It aims to determine if the price of Airbnb apartments are dependent on location, and quantify the effects of proximity to amenities like city centres, tourist attractions and transport facilities.
 
-Majority of current studies are looking at airbnb listings from a price standpoint, and little geospatial research has been done on airbnb listings in Beijing during covid. We aim to offer a geospatial analysis perspective of Beijing's airbnb apartments that will reveal important spatial patterns that can be considered either on individual level in terms of considering future locations of airbnb apartments,  or on a policy level in terms of regulating rental businesses like airbnb post covid. 
+Majority of current studies are looking at Airbnb listings from a price standpoint, and little geospatial research has been done on Airbnb listings in Beijing during Covid. We aim to offer a geospatial analysis perspective of Beijing's Airbnb apartments that will reveal important spatial patterns that can be considered either on individual level in terms of considering future locations of Airbnb apartments,  or on a policy level in terms of regulating rental businesses like Airbnb post Covid. 
 
-## Other References
+## References
+
+-   Li, J. I. A. L. I. N., & Biljecki, F. I. L. I. P. (2019). The implementation of big data analysis in regulating online short-term rental business: a case of Airbnb in Beijing. ISPRS Annals of the Photogrammetry, Remote Sensing and Spatial Information Sciences, 4, 79-86.
+
+-   Guo, X. (2020, August 1). The value of location for Airbnb Apartments: A hedonic analysis of Airbnb listing price in Beijing. Home Page. Retrieved March 5, 2023, from https://doi.org/10.7298/6s0s-zt49
 
 -   Zhao, C., Wu, Y., Chen, Y., & Chen, G. (2023). Multiscale Effects of Hedonic Attributes on Airbnb Listing Prices Based on MGWR: A Case Study of Beijing, China. Sustainability, 15(2), 1703. <https://doi.org/10.3390/su15021703>
 
