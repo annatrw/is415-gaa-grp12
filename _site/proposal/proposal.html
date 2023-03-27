@@ -106,13 +106,23 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#spatial-analysis-of-airbnb-listings-in-beijing-a-pre-and-post-covid-19-comparison" id="toc-spatial-analysis-of-airbnb-listings-in-beijing-a-pre-and-post-covid-19-comparison" class="nav-link active" data-scroll-target="#spatial-analysis-of-airbnb-listings-in-beijing-a-pre-and-post-covid-19-comparison">Spatial analysis of Airbnb listings in Beijing: A pre and post COVID-19 comparison</a></li>
+  <li><a href="#spatial-point-pattern-analysis-of-airbnb-listings-in-beijing-a-pre-and-post-covid-19-comparison" id="toc-spatial-point-pattern-analysis-of-airbnb-listings-in-beijing-a-pre-and-post-covid-19-comparison" class="nav-link active" data-scroll-target="#spatial-point-pattern-analysis-of-airbnb-listings-in-beijing-a-pre-and-post-covid-19-comparison">Spatial Point Pattern Analysis of Airbnb listings in Beijing: A pre and post COVID-19 comparison</a></li>
   <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#objectives" id="toc-objectives" class="nav-link" data-scroll-target="#objectives">Objectives</a>
   <ul class="collapse">
-  <li><a href="#spatial-point-patterns-analysis" id="toc-spatial-point-patterns-analysis" class="nav-link" data-scroll-target="#spatial-point-patterns-analysis">1.0 Spatial Point Patterns Analysis</a></li>
-  <li><a href="#spatial-autocorrelation-analysis" id="toc-spatial-autocorrelation-analysis" class="nav-link" data-scroll-target="#spatial-autocorrelation-analysis">2.0 Spatial Autocorrelation Analysis</a></li>
+  <li><a href="#spatial-point-patterns-analysis" id="toc-spatial-point-patterns-analysis" class="nav-link" data-scroll-target="#spatial-point-patterns-analysis">1.0 Spatial Point Patterns Analysis</a>
+  <ul class="collapse">
+  <li><a href="#first-order-spatial-point-patterns-analysis" id="toc-first-order-spatial-point-patterns-analysis" class="nav-link" data-scroll-target="#first-order-spatial-point-patterns-analysis">1.1 First-order Spatial Point Patterns Analysis</a></li>
+  <li><a href="#second-order-spatial-point-patterns-analysis" id="toc-second-order-spatial-point-patterns-analysis" class="nav-link" data-scroll-target="#second-order-spatial-point-patterns-analysis">1.2 Second-order Spatial Point Patterns Analysis</a></li>
   </ul></li>
+  <li><a href="#network-constrained-spatial-point-pattern-analysis" id="toc-network-constrained-spatial-point-pattern-analysis" class="nav-link" data-scroll-target="#network-constrained-spatial-point-pattern-analysis">2.0 Network Constrained Spatial Point Pattern Analysis</a>
+  <ul class="collapse">
+  <li><a href="#network-constrained-kde-analysis" id="toc-network-constrained-kde-analysis" class="nav-link" data-scroll-target="#network-constrained-kde-analysis">2.1 Network Constrained KDE Analysis</a></li>
+  <li><a href="#network-constrained-g-k-function-analysis" id="toc-network-constrained-g-k-function-analysis" class="nav-link" data-scroll-target="#network-constrained-g-k-function-analysis">2.2 Network Constrained G, K function Analysis</a></li>
+  <li><a href="#cross-k-function-analysis" id="toc-cross-k-function-analysis" class="nav-link" data-scroll-target="#cross-k-function-analysis">2.3 Cross K function Analysis</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#ui-specifications" id="toc-ui-specifications" class="nav-link" data-scroll-target="#ui-specifications">UI specifications</a></li>
   <li><a href="#related-works" id="toc-related-works" class="nav-link" data-scroll-target="#related-works">Related Works</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   <li><a href="#datasets" id="toc-datasets" class="nav-link" data-scroll-target="#datasets">Datasets</a></li>
@@ -139,34 +149,51 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="spatial-analysis-of-airbnb-listings-in-beijing-a-pre-and-post-covid-19-comparison" class="level2">
-<h2 class="anchored" data-anchor-id="spatial-analysis-of-airbnb-listings-in-beijing-a-pre-and-post-covid-19-comparison">Spatial analysis of Airbnb listings in Beijing: A pre and post COVID-19 comparison</h2>
+<section id="spatial-point-pattern-analysis-of-airbnb-listings-in-beijing-a-pre-and-post-covid-19-comparison" class="level1">
+<h1>Spatial Point Pattern Analysis of Airbnb listings in Beijing: A pre and post COVID-19 comparison</h1>
 </section>
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
 <p>Airbnb has achieved considerable global success with its short-term home-sharing business model, providing travellers with convenient and cost-effective accommodation options. <strong>Beijing</strong>, as one of the world’s largest cities and a popular tourist destination in China, is an ideal location to explore the impact of Airbnb on local communities, particularly in light of the COVID-19 pandemic and the resulting changes in travel patterns. Our project aims to compare Airbnb listing data in Beijing <strong>before and after the COVID-19 outbreak</strong> to understand how the pandemic has affected Airbnb activity and to identify the spatial patterns of listings in the city.</p>
 </section>
-<section id="objectives" class="level2">
-<h2 class="anchored" data-anchor-id="objectives">Objectives</h2>
-<section id="spatial-point-patterns-analysis" class="level3">
-<h3 class="anchored" data-anchor-id="spatial-point-patterns-analysis">1.0 Spatial Point Patterns Analysis</h3>
-<section id="first-order-spatial-point-patterns-analysis" class="level5">
-<h5 class="anchored" data-anchor-id="first-order-spatial-point-patterns-analysis">1.1 First-order Spatial Point Patterns Analysis</h5>
+<section id="objectives" class="level1">
+<h1>Objectives</h1>
+<section id="spatial-point-patterns-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="spatial-point-patterns-analysis">1.0 Spatial Point Patterns Analysis</h2>
+<section id="first-order-spatial-point-patterns-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="first-order-spatial-point-patterns-analysis">1.1 First-order Spatial Point Patterns Analysis</h3>
 <p><strong>Kernel Density Estimation Analysis</strong>: We could develop kernel density estimation analysis on Airbnb’s listing before and after covid, this could provide us valuable insights into the spatial distribution of Beijing’s Airbnb, identifying the hotspots for tourism, and see if the covid has changed this pattern and figure out the reason behind it.</p>
 </section>
-<section id="second-order-spatial-point-patterns-analysis" class="level5">
-<h5 class="anchored" data-anchor-id="second-order-spatial-point-patterns-analysis">1.2 Second-order Spatial Point Patterns Analysis</h5>
+<section id="second-order-spatial-point-patterns-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="second-order-spatial-point-patterns-analysis">1.2 Second-order Spatial Point Patterns Analysis</h3>
 <p>After we analysed the spatial point patterns, we have to confirm the observations statistically by choosing representative study areas using L function. The hypothesis is as follows: - H0: The distribution of Airbnb Listings in beijing are randomly distributed. - H1: The distribution of Airbnb Listings are not randomly distributed.</p>
 </section>
 </section>
-<section id="spatial-autocorrelation-analysis" class="level3">
-<h3 class="anchored" data-anchor-id="spatial-autocorrelation-analysis">2.0 Spatial Autocorrelation Analysis</h3>
-<p>We will aim to analyse the <strong>high and low clustering of airbnb listings</strong> in Beijing, determine if there is significant clustering on a global and local level as well as conduct Local Indicators of Spatial Correlation analysis that identifies regions that are positively or negatively correlated to each other.</p>
-<p>Additionally, <strong>Emerging Hot Spot Analysis</strong> can be conducted to determine how hot and cold spots change over time, particularly with the variation during the pandemic period.</p>
+<section id="network-constrained-spatial-point-pattern-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="network-constrained-spatial-point-pattern-analysis">2.0 Network Constrained Spatial Point Pattern Analysis</h2>
+<p>We will analyse the point events - location of Airbnb listings in Beijing that occurs alongside the local road network.</p>
+<section id="network-constrained-kde-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="network-constrained-kde-analysis">2.1 Network Constrained KDE Analysis</h3>
+<p>Using network constrained KDE analysis, it will visualise the road segments where higher density of Airbnb listings are located at. Before and after Covid KDE maps will be available for comparison.</p>
+</section>
+<section id="network-constrained-g-k-function-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="network-constrained-g-k-function-analysis">2.2 Network Constrained G, K function Analysis</h3>
+</section>
+<section id="cross-k-function-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="cross-k-function-analysis">2.3 Cross K function Analysis</h3>
+<p>Ho = The distribution of Airbnb listings before and after Covid are spatially independent.</p>
+<p>H1= The distribution of Airbnb listings before and after Covid are NOT spatially independent.</p>
+<p>The null hypothesis will be rejected if p-value is smaller than alpha value of 0.001 (i.e.&nbsp;at 99.9% confident interval).</p>
 </section>
 </section>
-<section id="related-works" class="level2">
-<h2 class="anchored" data-anchor-id="related-works">Related Works</h2>
+</section>
+<section id="ui-specifications" class="level1">
+<h1>UI specifications</h1>
+<p><img src="image/img01.png" class="img-fluid"> <img src="image/img02.png" class="img-fluid"></p>
+<p><img src="image/img03.png" class="img-fluid"></p>
+</section>
+<section id="related-works" class="level1">
+<h1>Related Works</h1>
 <ol type="1">
 <li><a href="https://filipbiljecki.com/publications/2019_sdsc_airbnb_beijing.pdf"> The Implementation of Big Data Analysis In Regulating Online Short-term Rental Business: A Case of Airbnb in Beijing </a>
 <ul>
@@ -179,8 +206,8 @@ ul.task-list li input[type="checkbox"] {
 </ol>
 <p>Majority of current studies are looking at Airbnb listings from a price standpoint, and little geospatial research has been done on Airbnb listings in Beijing during Covid. We aim to offer a geospatial analysis perspective of Beijing’s Airbnb apartments that will reveal important spatial patterns that can be considered either on individual level in terms of considering future locations of Airbnb apartments,&nbsp; or on a policy level in terms of regulating rental businesses like Airbnb post Covid.&nbsp;</p>
 </section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
+<section id="references" class="level1">
+<h1>References</h1>
 <ul>
 <li><p>Li, J. I. A. L. I. N., &amp; Biljecki, F. I. L. I. P. (2019). The implementation of big data analysis in regulating online short-term rental business: a case of Airbnb in Beijing. ISPRS Annals of the Photogrammetry, Remote Sensing and Spatial Information Sciences, 4, 79-86.</p></li>
 <li><p>Guo, X. (2020, August 1). The value of location for Airbnb Apartments: A hedonic analysis of Airbnb listing price in Beijing. Home Page. Retrieved March 5, 2023, from https://doi.org/10.7298/6s0s-zt49</p></li>
@@ -189,8 +216,8 @@ ul.task-list li input[type="checkbox"] {
 <li><p>Hargrave, M. (2023, February 28). Hedonic pricing: Definition, how the model is used, and example. Investopedia. Retrieved March 5, 2023, from <a href="https://www.investopedia.com/terms/h/hedonicpricing.asp" class="uri">https://www.investopedia.com/terms/h/hedonicpricing.asp</a></p></li>
 </ul>
 </section>
-<section id="datasets" class="level2">
-<h2 class="anchored" data-anchor-id="datasets">Datasets</h2>
+<section id="datasets" class="level1">
+<h1>Datasets</h1>
 <ul>
 <li>Beijing airbnb listing before covid: <a href="https://www.kaggle.com/datasets/merryyundi/airbnb-beijing-20190211">Link</a></li>
 <li>Beijing airbnb listing after covid: <a href="https://drive.google.com/file/d/1wijxpA32FvVmSlXXavCy8bdtYT-rt7hF/view?usp=sharing">Link&nbsp;</a></li>

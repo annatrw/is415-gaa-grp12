@@ -2,31 +2,52 @@
 title: "Project Proposal"
 ---
 
-## Spatial analysis of Airbnb listings in Beijing: A pre and post COVID-19 comparison
+# Spatial Point Pattern Analysis of Airbnb listings in Beijing: A pre and post COVID-19 comparison
 
-## Introduction
+# Introduction
 
 Airbnb has achieved considerable global success with its short-term home-sharing business model, providing travellers with convenient and cost-effective accommodation options. **Beijing**, as one of the world's largest cities and a popular tourist destination in China, is an ideal location to explore the impact of Airbnb on local communities, particularly in light of the COVID-19 pandemic and the resulting changes in travel patterns. Our project aims to compare Airbnb listing data in Beijing **before and after the COVID-19 outbreak** to understand how the pandemic has affected Airbnb activity and to identify the spatial patterns of listings in the city.
 
-## Objectives
+# Objectives
 
-### 1.0 Spatial Point Patterns Analysis
+## 1.0 Spatial Point Patterns Analysis
 
-##### 1.1 First-order Spatial Point Patterns Analysis
+### 1.1 First-order Spatial Point Patterns Analysis
 
 **Kernel Density Estimation Analysis**: We could develop kernel density estimation analysis on Airbnb's listing before and after covid, this could provide us valuable insights into the spatial distribution of Beijing's Airbnb, identifying the hotspots for tourism, and see if the covid has changed this pattern and figure out the reason behind it.
 
-##### 1.2 Second-order Spatial Point Patterns Analysis
+### 1.2 Second-order Spatial Point Patterns Analysis
 
-After we analysed the spatial point patterns, we have to confirm the observations statistically by choosing representative study areas using L function. The hypothesis is as follows: - H0: The distribution of Airbnb Listings in beijing are randomly distributed. - H1: The distribution of Airbnb Listings are not randomly distributed.
+After we analysed the spatial point patterns, we have to confirm the observations statistically by choosing representative study areas using L function. The hypothesis is as follows: 
+- H0: The distribution of Airbnb Listings in beijing are randomly distributed. 
+- H1: The distribution of Airbnb Listings are not randomly distributed.
 
-### 2.0 Spatial Autocorrelation Analysis
+## 2.0 Network Constrained Spatial Point Pattern Analysis
 
-We will aim to analyse the **high and low clustering of airbnb listings** in Beijing, determine if there is significant clustering on a global and local level as well as conduct Local Indicators of Spatial Correlation analysis that identifies regions that are positively or negatively correlated to each other.
+We will analyse the point events - location of Airbnb listings in Beijing that occurs alongside the local road network.
 
-Additionally, **Emerging Hot Spot Analysis** can be conducted to determine how hot and cold spots change over time, particularly with the variation during the pandemic period.
+### 2.1 Network Constrained KDE Analysis
+Using network constrained KDE analysis, it will visualise the road segments where higher density of Airbnb listings are located at. Before and after Covid KDE maps will be available for comparison.
 
-## Related Works
+### 2.2 Network Constrained G, K function Analysis
+
+
+### 2.3 Cross K function Analysis
+Ho = The distribution of Airbnb listings before and after Covid are spatially independent.
+
+H1= The distribution of Airbnb listings before and after Covid are NOT spatially independent.
+
+The null hypothesis will be rejected if p-value is smaller than alpha value of 0.001 (i.e. at 99.9% confident interval).
+
+# UI specifications
+
+![](image/img01.png)
+![](image/img02.png)
+
+![](image/img03.png)
+
+
+# Related Works
 
 1.  <a href="https://filipbiljecki.com/publications/2019_sdsc_airbnb_beijing.pdf"> The Implementation of Big Data Analysis In Regulating Online Short-term Rental Business: A Case of Airbnb in Beijing </a>
     -   This paper investigates how Beijing's Airbnb apartments are affecting housing prices in the region with the use of a machine learning model to analyse price sensitivity as a result of increasing Airbnb activities in Beijing. It provides policy recommendations on regulating short-term rental businesses based on a neighbourhood's price sensitivity.
@@ -35,7 +56,7 @@ Additionally, **Emerging Hot Spot Analysis** can be conducted to determine how h
 
 Majority of current studies are looking at Airbnb listings from a price standpoint, and little geospatial research has been done on Airbnb listings in Beijing during Covid. We aim to offer a geospatial analysis perspective of Beijing's Airbnb apartments that will reveal important spatial patterns that can be considered either on individual level in terms of considering future locations of Airbnb apartments,  or on a policy level in terms of regulating rental businesses like Airbnb post Covid. 
 
-## References
+# References
 
 -   Li, J. I. A. L. I. N., & Biljecki, F. I. L. I. P. (2019). The implementation of big data analysis in regulating online short-term rental business: a case of Airbnb in Beijing. ISPRS Annals of the Photogrammetry, Remote Sensing and Spatial Information Sciences, 4, 79-86.
 
@@ -47,7 +68,7 @@ Majority of current studies are looking at Airbnb listings from a price standpoi
 
 -   Hargrave, M. (2023, February 28). Hedonic pricing: Definition, how the model is used, and example. Investopedia. Retrieved March 5, 2023, from <https://www.investopedia.com/terms/h/hedonicpricing.asp>
 
-## Datasets
+# Datasets
 
 -   Beijing airbnb listing before covid: [Link](https://www.kaggle.com/datasets/merryyundi/airbnb-beijing-20190211)
 -   Beijing airbnb listing after covid: [Link ](https://drive.google.com/file/d/1wijxpA32FvVmSlXXavCy8bdtYT-rt7hF/view?usp=sharing)
