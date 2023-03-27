@@ -11,7 +11,7 @@
     "href": "analysis/SPPA/SPPA.html",
     "title": "Spatial Point Pattern Analysis",
     "section": "",
-    "text": "Data\n\n\n\n\n\nImport packages\n\n\nData wrangling\n\n\nFirst order\n\n\nSecond order"
+    "text": "Import packages\n\npacman::p_load(maptools, sf, raster, spatstat, tmap, tidyverse)\n\n\n\nData\n\n#before <- read_csv(\"data/aspatial/beijing_beforecovid.csv\")\n\n\n#after <- read_csv(\"data/aspatial/beijing_aftercovid.csv\")\n\n\ntest = 0\n\n\n\n\n\n\nData wrangling\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFirst order\n\n\nSecond order"
   },
   {
     "objectID": "index.html",

@@ -16,15 +16,15 @@ pacman::p_load(maptools, sf, raster, spatstat, tmap, tidyverse)
 # Data
 
 ```{r}
-before <- read_csv("data/beijing_beforecovid.csv")
+#before <- read_csv("data/aspatial/beijing_beforecovid.csv")
 ```
 
 ```{r}
-after <- read_csv("data/beijing_aftercovid.csv")
+#after <- read_csv("data/aspatial/beijing_aftercovid.csv")
 ```
 
 ```{r}
-
+test = 0
 ```
 
 ```{r}
