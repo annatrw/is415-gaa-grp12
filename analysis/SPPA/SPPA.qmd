@@ -1,0 +1,31 @@
+---
+title: "Spatial Point Pattern Analysis"
+date-modified: "`r Sys.Date()`"
+format: html
+execute: 
+  message: true 
+  warning: false
+editor: visual
+---
+
+# Data
+```{r}
+
+```
+
+
+# Import packages
+
+
+# Data wrangling
+
+
+
+
+
+# First order 
+
+
+
+
+# Second order

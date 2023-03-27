@@ -10,7 +10,12 @@ website:
       - about.qmd
       - href: "proposal/proposal.html"
         text: Proposal
-
+      - href: "analysis/Data.html"
+        text: "Data Wrangling"
+      - href: "analysis/SPPA.html"
+        text: "Spatial Point Pattern Analysis"
+      - href: "analysis/Network-Constrained.html"
+        text: "Network Constrained SPPA"
 format:
   html:
     theme: cosmo
