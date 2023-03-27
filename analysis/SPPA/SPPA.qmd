@@ -8,16 +8,126 @@ execute:
 editor: visual
 ---
 
+# Import packages
+```{r}
+pacman::p_load(maptools, sf, raster, spatstat, tmap, tidyverse)
+```
+
 # Data
+
+```{r}
+before <- read_csv("data/beijing_beforecovid.csv")
+```
+
+```{r}
+after <- read_csv("data/beijing_aftercovid.csv")
+```
+
 ```{r}
 
 ```
 
+```{r}
 
-# Import packages
-
+```
 
 # Data wrangling
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
 
 
 
