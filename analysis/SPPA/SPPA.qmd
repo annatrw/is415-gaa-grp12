@@ -9,6 +9,7 @@ editor: visual
 ---
 
 # Import packages
+
 ```{r}
 pacman::p_load(maptools, sf, raster, spatstat, tmap, tidyverse)
 ```
@@ -16,77 +17,75 @@ pacman::p_load(maptools, sf, raster, spatstat, tmap, tidyverse)
 # Data
 
 ```{r}
-#before <- read_csv("data/aspatial/beijing_beforecovid.csv")
+before <- read_csv("data/aspatial/listings.csv")
 ```
 
 ```{r}
-#after <- read_csv("data/aspatial/beijing_aftercovid.csv")
+after <- read_csv("data/aspatial/listings_after.csv")
 ```
 
 ```{r}
-test = 0
+glimpse(before)
+```
+
+
+
+```{r}
+nbh_sf <- st_read("data/aspatial/neighbourhoods.geojson") %>%
+  st_transform(crs=4555)
 ```
 
 ```{r}
-
+st_crs(nbh_sf)
 ```
 
-# Data wrangling
+
 
 ```{r}
-
-```
-
-```{r}
-
+before <- subset(before, select=c(id, host_name, host_since, street, neighbourhood, neighbourhood_cleansed, city, state, zipcode, latitude, longitude))
 ```
 
 ```{r}
-
+before_sf <- st_as_sf(before, coords=c("longitude", "latitude"), crs=4555)
 ```
 
 ```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
+tmap_mode("plot")+
+  qtm(nbh_sf) +
+  tm_shape(before_sf)+
+  tm_dots()
 
 ```
 
 ```{r}
+st_crs(nbh_sf)
+```
 
+
+```{r}
+before_sp <- as_Spatial(before_sf)
+nbh_sp <- as_Spatial(nbh_sf)
 ```
 
 ```{r}
-
+before_sp
 ```
 
 ```{r}
-
+before_spObj <- as(before_sp, "SpatialPoints")
+nbh_spObj <- as(nbh_sp, "SpatialPolygons")
 ```
 
 ```{r}
-
+before_spObj
+```
+```{r}
+nbh_spObj
 ```
 
 ```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
+#before_ppp <- as(before_spObj, "ppp")
+#nbh_ppp <- as(nbh_spObj, "ppp")
 ```
 
 ```{r}
@@ -129,13 +128,26 @@ test = 0
 
 ```
 
+```{r}
 
+```
 
+```{r}
 
+```
 
-# First order 
+```{r}
 
+```
 
+```{r}
 
+```
+
+```{r}
+
+```
+
+# First order
 
 # Second order

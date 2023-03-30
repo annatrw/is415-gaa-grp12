@@ -5,17 +5,21 @@ website:
   title: "is415-gaa-grp12"
   navbar:
     left:
+    - text: "Analysis"
+      menu:
+        - text: "Data Wrangling"
+          href: "analysis/Data/Data.html"
+        - text: "Spatial Point Pattern Analysis"
+          href: "analysis/SPPA/SPPA.html"
+        - text: "Network Constrained SPPA"
+          href: "analysis/Network-Constrained/Network-Constrained.html"
+    right:
       - href: index.qmd
         text: Home
       - about.qmd
-      - href: "proposal/proposal.html"
-        text: Proposal
-      - href: "analysis/Data.html"
-        text: "Data Wrangling"
-      - href: "analysis/SPPA.html"
-        text: "Spatial Point Pattern Analysis"
-      - href: "analysis/Network-Constrained.html"
-        text: "Network Constrained SPPA"
+      - text: "Proposal"
+        href: "proposal/proposal.html"
+      
 format:
   html:
     theme: cosmo
