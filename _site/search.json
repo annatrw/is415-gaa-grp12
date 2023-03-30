@@ -4,21 +4,21 @@
     "href": "about.html",
     "title": "About",
     "section": "",
-    "text": "About this site\n\n1 + 1\n\n[1] 2"
+    "text": "1 + 1\n\n[1] 2"
   },
   {
     "objectID": "analysis/SPPA/SPPA.html",
     "href": "analysis/SPPA/SPPA.html",
     "title": "Spatial Point Pattern Analysis",
     "section": "",
-    "text": "Import packages\n\npacman::p_load(maptools, sf, raster, spatstat, tmap, tidyverse)\n\n\n\nData\n\n#before <- read_csv(\"data/aspatial/beijing_beforecovid.csv\")\n\n\n#after <- read_csv(\"data/aspatial/beijing_aftercovid.csv\")\n\n\ntest = 0\n\n\n\n\n\n\nData wrangling\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFirst order\n\n\nSecond order"
+    "text": "Data\n\n#before <- read_csv(\"data/aspatial/beijing_beforecovid.csv\")\n\n\n#after <- read_csv(\"data/aspatial/beijing_aftercovid.csv\")\n\n\ntest = 0\n\n\n\n\n\n\nData wrangling\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFirst order\n\n\nSecond order"
   },
   {
     "objectID": "index.html",
     "href": "index.html",
     "title": "is415-gaa-grp12",
     "section": "",
-    "text": "We are a group of students under Prof Kam, doing IS415 Geospatial Analytics and Applications AY2022-23 Semester 2."
+    "text": "import the data\n\n# run the code"
   },
   {
     "objectID": "proposal/proposal.html#spatial-point-patterns-analysis",
