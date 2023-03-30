@@ -4,4 +4,10 @@ title: "is415-gaa-grp12"
 
 We are a group of students under Prof Kam, doing IS415 Geospatial Analytics and Applications AY2022-23 Semester 2.
 
-test
+import the data
+
+```{r}
+# run the code
+```
+
+michelle's test... please work
