@@ -11,11 +11,11 @@ editor: visual
 # Import packages
 
 ```{r}
-pacman::p_load(maptools, sf, raster, spatstat, tmap, tidyverse)
+pacman::p_load(maptools, sf, sp, rgdal, raster, spatstat, tmap, tidyverse, plotly, devtools)
 ```
 
 # Data
-
+## Aspatial
 ```{r}
 before <- read_csv("data/aspatial/listings.csv")
 ```
@@ -24,11 +24,51 @@ before <- read_csv("data/aspatial/listings.csv")
 after <- read_csv("data/aspatial/listings_after.csv")
 ```
 
+
 ```{r}
-glimpse(before)
+colnames(before)
+```
+
+```{r}
+colnames(after)
+```
+
+```{r}
+before <- subset(before, select=c(id, street, neighbourhood_cleansed, latitude, longitude))
+```
+
+```{r}
+after <- subset(after, select= c(id, neighbourhood, latitude, longitude))
+```
+
+```{r}
+sum(is.na(before$latitude))
+```
+
+```{r}
+sum(is.na(before$longitude))
+```
+
+```{r}
+sum(is.na(after$latitude))
+```
+
+```{r}
+sum(is.na(after$longitude))
+```
+
+```{r}
+before_sf <- st_as_sf(before, coords=c("longitude", "latitude"), crs=4326) %>% st_transform(crs=4555)
+```
+
+```{r}
+after_sf <- st_as_sf(after, coords=c("longitude", "latitude"), crs=4326) %>% st_transform(crs=4555)
 ```
 
 
+
+
+## Geospatial
 
 ```{r}
 nbh_sf <- st_read("data/aspatial/neighbourhoods.geojson") %>%
@@ -39,16 +79,33 @@ nbh_sf <- st_read("data/aspatial/neighbourhoods.geojson") %>%
 st_crs(nbh_sf)
 ```
 
+```{r}
+length(which(st_is_valid(nbh_sf) == FALSE))
+```
 
 
 ```{r}
-before <- subset(before, select=c(id, host_name, host_since, street, neighbourhood, neighbourhood_cleansed, city, state, zipcode, latitude, longitude))
+nbh_sf[rowSums(is.na(nbh_sf))!=0,]
 ```
 
 ```{r}
-before_sf <- st_as_sf(before, coords=c("longitude", "latitude"), crs=4555)
+nbh_sf <- subset(nbh_sf, select=-c(neighbourhood_group))
 ```
 
+```{r}
+plot(st_geometry(nbh_sf))
+```
+
+```{r}
+tmap_mode("view")
+tm_shape(before_sf) +
+  tm_dots(col="blue", size=0.05)
+```
+
+```{r}
+tmap_mode("plot")
+```
+## Initial viz
 ```{r}
 tmap_mode("plot")+
   qtm(nbh_sf) +
@@ -58,96 +115,297 @@ tmap_mode("plot")+
 ```
 
 ```{r}
-st_crs(nbh_sf)
+tmap_mode("plot")+
+  qtm(nbh_sf) +
+  tm_shape(after_sf)+
+  tm_dots()
+
 ```
-
-
+## Remove excess points falling outside of study area
+before covid
 ```{r}
-before_sp <- as_Spatial(before_sf)
-nbh_sp <- as_Spatial(nbh_sf)
-```
-
-```{r}
-before_sp
-```
-
-```{r}
-before_spObj <- as(before_sp, "SpatialPoints")
-nbh_spObj <- as(nbh_sp, "SpatialPolygons")
+out_before <- before_sf[lengths(st_intersects(before_sf, nbh_sf))==0,]
 ```
 
 ```{r}
-before_spObj
+tmap_mode("plot")
+tm_shape(nbh_sf) +
+  tm_polygons() +
+tm_shape(out_before) +
+  tm_dots(size = 0.01,
+          col = "darkblue",
+          border.col="black",
+          border.lwd=0.5)
 ```
+^before covid data points all inside beijing ploygon yay
+
+
+after covid
 ```{r}
-nbh_spObj
-```
-
-```{r}
-#before_ppp <- as(before_spObj, "ppp")
-#nbh_ppp <- as(nbh_spObj, "ppp")
-```
-
-```{r}
-
-```
-
-```{r}
-
+out <- after_sf[lengths(st_intersects(after_sf, nbh_sf))==0,]
 ```
 
 ```{r}
+tmap_mode("plot")
+tm_shape(nbh_sf) +
+  tm_polygons() +
+tm_shape(out) +
+  tm_dots(size = 0.01,
+          col = "red",
+          border.col="black",
+          border.lwd=0.5)
+```
+```{r}
+after_sf <- subset(after_sf, lengths(st_intersects(after_sf, nbh_sf))!=0,)
+```
+
+```{r}
+tmap_mode("plot")
+tm_shape(nbh_sf) +
+  tm_polygons() +
+tm_shape(after_sf) +
+  tm_dots(size = 0.01,
+          col = "blue",
+          border.col="black",
+          border.lwd=0.5)
+```
+
+# Convert to spatial object
+```{r}
+before_as <- as_Spatial(before_sf)
+after_as <- as_Spatial(after_sf)
+nbh_as <- as_Spatial(nbh_sf)
+```
+
+```{r}
+before_as
+```
+
+```{r}
+before_sp <- as(before_as, "SpatialPoints")
+after_sp <- as(after_as, "SpatialPoints")
+nbh_sp <- as(nbh_as, "SpatialPolygons")
+```
+
+```{r}
+before_sp <- spTransform(before_sp, CRS("+proj=utm +zone=48 +datum=WGS84 +units=m +no_defs"))
+after_sp <- spTransform(after_sp, CRS("+proj=utm +zone=48 +datum=WGS84 +units=m +no_defs"))
+nbh_sp <- spTransform(nbh_sp, CRS("+proj=utm +zone=48 +datum=WGS84 +units=m +no_defs"))
+```
+
+```{r}
+after_sp
+```
+
+```{r}
+before_ppp <- as(before_sp, "ppp")
+after_ppp <- as(after_sp, "ppp")
+```
+
+```{r}
+plot(before_ppp)
+```
+
+```{r}
+plot(after_ppp)
+```
+
+```{r}
+summary(before_ppp
+        )
+```
+
+```{r}
+any(duplicated(before_ppp))
+```
+
+```{r}
+any(duplicated(after_ppp))
+```
+
+```{r}
+#| echo: false
+multiplicity(after_ppp)
+```
+
+number of points that are co-incident [at the same location]
+1141 points
+```{r}
+sum(multiplicity(after_ppp) > 1)
+```
+
+plot duplicated 
+```{r}
+tmap_mode('view')
+tm_shape(after_sf) +
+  tm_dots(alpha=0.4, 
+          size=0.05)
+```
+```{r}
+tmap_mode("plot")
+```
+
+```{r}
+after_ppp_jit <- rjitter(after_ppp, 
+                             retry=TRUE, 
+                             nsim=1, 
+                             drop=TRUE)
+```
+
+```{r}
+any(duplicated(after_ppp_jit))
+```
+## owin object
+```{r}
+beijing_owin <- as(nbh_sp, "owin")
+```
+
+```{r}
+plot(beijing_owin)
+```
+
+```{r}
+summary(beijing_owin)
+```
+
+```{r}
+beforeBeijing_ppp = before_ppp[beijing_owin]
+afterBeijing_ppp = after_ppp[beijing_owin]
 
 ```
 
 ```{r}
-
+plot(beforeBeijing_ppp)
 ```
 
 ```{r}
-
+plot(afterBeijing_ppp)
 ```
 
 ```{r}
+# essentially, we're telling the function 'new unit length is 1000'
+# function will divide the old value by 1000 to obtain values expressed in kilometers
+# while this section isn't using listings_2021 yet, we'll prep it with the rest of our data :^)
 
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
+before_ppp_Beijing_km <- rescale(beforeBeijing_ppp, 1000, 'km')
+after_ppp_Beijing_km <- rescale(afterBeijing_ppp, 1000, 'km')
 
 ```
 
 # First order
+```{r}
+kde_before_Beijing_bw <- density(before_ppp_Beijing_km,
+                                   sigma=bw.diggle,
+                                   edge=TRUE,
+                                   kernel="gaussian")
+kde_after_Beijing_bw <- density(after_ppp_Beijing_km,
+                                   sigma=bw.diggle,
+                                   edge=TRUE,
+                                   kernel="gaussian")
+```
+
+```{r}
+plot(kde_before_Beijing_bw)
+```
+
+```{r}
+plot(kde_after_Beijing_bw)
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
 
 # Second order
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
