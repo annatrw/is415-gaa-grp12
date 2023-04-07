@@ -1,12 +1,12 @@
 ---
 title: "Spatial Point Pattern Analysis"
-date-modified: "`r Sys.Date()`"
 format: html
 execute: 
   message: true 
   warning: false
 editor: visual
 ---
+
 
 # Import packages
 
@@ -15,7 +15,9 @@ pacman::p_load(maptools, sf, sp, rgdal, raster, spatstat, tmap, tidyverse, plotl
 ```
 
 # Data
+
 ## Aspatial
+
 ```{r}
 before <- read_csv("data/aspatial/listings.csv")
 ```
@@ -23,7 +25,6 @@ before <- read_csv("data/aspatial/listings.csv")
 ```{r}
 after <- read_csv("data/aspatial/listings_after.csv")
 ```
-
 
 ```{r}
 colnames(before)
@@ -65,9 +66,6 @@ before_sf <- st_as_sf(before, coords=c("longitude", "latitude"), crs=4326) %>% s
 after_sf <- st_as_sf(after, coords=c("longitude", "latitude"), crs=4326) %>% st_transform(crs=4555)
 ```
 
-
-
-
 ## Geospatial
 
 ```{r}
@@ -82,7 +80,6 @@ st_crs(nbh_sf)
 ```{r}
 length(which(st_is_valid(nbh_sf) == FALSE))
 ```
-
 
 ```{r}
 nbh_sf[rowSums(is.na(nbh_sf))!=0,]
@@ -105,7 +102,9 @@ tm_shape(before_sf) +
 ```{r}
 tmap_mode("plot")
 ```
+
 ## Initial viz
+
 ```{r}
 tmap_mode("plot")+
   qtm(nbh_sf) +
@@ -121,8 +120,11 @@ tmap_mode("plot")+
   tm_dots()
 
 ```
+
 ## Remove excess points falling outside of study area
+
 before covid
+
 ```{r}
 out_before <- before_sf[lengths(st_intersects(before_sf, nbh_sf))==0,]
 ```
@@ -137,10 +139,11 @@ tm_shape(out_before) +
           border.col="black",
           border.lwd=0.5)
 ```
-^before covid data points all inside beijing ploygon yay
 
+\^before covid data points all inside beijing ploygon yay
 
 after covid
+
 ```{r}
 out <- after_sf[lengths(st_intersects(after_sf, nbh_sf))==0,]
 ```
@@ -155,6 +158,7 @@ tm_shape(out) +
           border.col="black",
           border.lwd=0.5)
 ```
+
 ```{r}
 after_sf <- subset(after_sf, lengths(st_intersects(after_sf, nbh_sf))!=0,)
 ```
@@ -171,6 +175,7 @@ tm_shape(after_sf) +
 ```
 
 # Convert to spatial object
+
 ```{r}
 before_as <- as_Spatial(before_sf)
 after_as <- as_Spatial(after_sf)
@@ -228,19 +233,21 @@ any(duplicated(after_ppp))
 multiplicity(after_ppp)
 ```
 
-number of points that are co-incident [at the same location]
-1141 points
+number of points that are co-incident \[at the same location\] 1141 points
+
 ```{r}
 sum(multiplicity(after_ppp) > 1)
 ```
 
-plot duplicated 
+plot duplicated
+
 ```{r}
 tmap_mode('view')
 tm_shape(after_sf) +
   tm_dots(alpha=0.4, 
           size=0.05)
 ```
+
 ```{r}
 tmap_mode("plot")
 ```
@@ -255,7 +262,9 @@ after_ppp_jit <- rjitter(after_ppp,
 ```{r}
 any(duplicated(after_ppp_jit))
 ```
+
 ## owin object
+
 ```{r}
 beijing_owin <- as(nbh_sp, "owin")
 ```
@@ -292,7 +301,12 @@ after_ppp_Beijing_km <- rescale(afterBeijing_ppp, 1000, 'km')
 
 ```
 
-# First order
+# First order- KDE/ raster maps
+
+## automatic bandwidth
+
+https://www.rdocumentation.org/packages/spatstat/versions/1.64-1/topics/density.ppp https://medium.com/analytics-vidhya/kernel-density-estimation-kernel-construction-and-bandwidth-optimization-using-maximum-b1dfce127073
+
 ```{r}
 kde_before_Beijing_bw <- density(before_ppp_Beijing_km,
                                    sigma=bw.diggle,
@@ -312,8 +326,66 @@ plot(kde_before_Beijing_bw)
 plot(kde_after_Beijing_bw)
 ```
 
+## raster layer object
+
+```{r}
+kde_before_Beijing_bw_raster <- kde_before_Beijing_bw %>% 
+  as.SpatialGridDataFrame.im() %>% 
+  raster()
+kde_after_Beijing_bw_raster <- kde_after_Beijing_bw %>% 
+  as.SpatialGridDataFrame.im() %>% 
+  raster()
+```
+
+```{r}
+kde_after_Beijing_bw_raster
+```
+
+```{r}
+projection(kde_before_Beijing_bw_raster) <- CRS("+init=EPSG:3414 +datum=WGS84 +units=km")
+projection(kde_after_Beijing_bw_raster) <- CRS("+init=EPSG:3414 +datum=WGS84 +units=km")
+
+```
+
+graphing on open street map
+
+```{r}
+tm_basemap("OpenStreetMap") +
+tm_shape(kde_before_Beijing_bw_raster) +
+  tm_raster("v", alpha=0.65) + 
+  tm_layout(legend.position = c("right", "bottom"), 
+            legend.height = 0.5, 
+            legend.width = 0.4,
+            main.title = "Before Covid Raster Density Map",
+            main.title.position = 'center',
+            main.title.size = 1,
+            frame = FALSE)
+```
+
+```{r}
+tm_basemap("OpenStreetMap") +
+tm_shape(kde_after_Beijing_bw_raster) +
+  tm_raster("v", alpha=0.65) + 
+  tm_layout(legend.position = c("right", "bottom"), 
+            legend.height = 0.5, 
+            legend.width = 0.4,
+            main.title = "After Covid Raster Density Map",
+            main.title.position = 'center',
+            main.title.size = 1,
+            frame = FALSE)
+```
+
+analysis: https://is415-msty.netlify.app/posts/2021-09-19-take-home-exercise-2/?panelset7=base5&panelset11=tourism3#kernel-density-maps-analysis-1
+
 ```{r}
 
+```
+
+adaptive bandwidth
+
+```{r}
+#kde_childcareSG_adaptive <- adaptive.density(childcareSG_ppp.km, method="kernel")
+#plot(kde_childcareSG_adaptive)
 ```
 
 ```{r}
@@ -324,88 +396,240 @@ plot(kde_after_Beijing_bw)
 
 ```
 
+# Second order- G and L function
+
+## districts testing
+
+H0: The distribution of the Airbnb Listings are randomly distributed H1: The distribution of the Airbnb Listings are not randomly distributed Confidence level : 95%
+
+### G- shijingshan
+
+https://www.rdocumentation.org/packages/spatstat/versions/1.64-1/topics/Gest
+
 ```{r}
+SJS = nbh_sp[nbh_as@data$neighbourhood == "石景山区",]
+plot(SJS, main = "ShiJingShan")
+```
+
+```{r}
+SJS_sp = as(SJS, "SpatialPolygons")
+SJS_owin = as(SJS_sp, "owin")
+before_SJS_ppp = before_ppp[SJS_owin]
+after_SJS_ppp = after_ppp_jit[SJS_owin]
+
+```
+
+before
+
+```{r}
+G_SJS_before = Gest(before_SJS_ppp, correction = "best")
+plot(G_SJS_before)
+```
+
+CSR test
+
+```{r}
+G_SJS_before.csr <- envelope(before_SJS_ppp, Gest, nsim = 999)
+```
+
+```{r}
+plot(G_SJS_before.csr)
+```
+
+after
+
+CSR test
+
+```{r}
+G_SJS_after.csr <- envelope(after_SJS_ppp, Gest, nsim = 999)
+```
+
+```{r}
+plot(G_SJS_after.csr)
+```
+
+### G- pinggu
+
+```{r}
+PG = nbh_sp[nbh_as@data$neighbourhood == "平谷区 / Pinggu",]
+plot(PG, main = "PingGu")
+```
+
+```{r}
+PG_sp = as(PG, "SpatialPolygons")
+PG_owin = as(PG_sp, "owin")
+before_PG_ppp = before_ppp[PG_owin]
+after_PG_ppp = after_ppp_jit[PG_owin]
+
+```
+
+before
+
+```{r}
+G_PG_before = Gest(before_PG_ppp, correction = "border")
+plot(G_PG_before)
+```
+
+CSR test
+
+```{r}
+G_PG_before.csr <- envelope(before_PG_ppp, Gest, nsim = 999)
+```
+
+```{r}
+plot(G_PG_before.csr)
+```
+
+after
+
+CSR test
+
+```{r}
+G_PG_after.csr <- envelope(after_PG_ppp, Gest, nsim = 999)
+```
+
+```{r}
+plot(G_PG_after.csr)
+```
+
+### G- shunyi
+
+```{r}
+SY = nbh_sp[nbh_as@data$neighbourhood == "顺义区 / Shunyi",]
+plot(SY, main = "ShunYi")
+```
+
+```{r}
+SY_sp = as(SY, "SpatialPolygons")
+SY_owin = as(SY_sp, "owin")
+before_SY_ppp = before_ppp[SY_owin]
+after_SY_ppp = after_ppp_jit[SY_owin]
+
+```
+
+before
+
+```{r}
+G_SY_before = Gest(before_SY_ppp, correction = "border")
+plot(G_SY_before, xlim=c(0,500))
+```
+
+CSR test
+
+```{r}
+G_SY_before.csr <- envelope(before_SY_ppp, Gest, nsim = 999)
+```
+
+```{r}
+plot(G_SY_before.csr)
+```
+
+after
+
+CSR test
+
+```{r}
+G_SY_after.csr <- envelope(after_SY_ppp, Gest, nsim = 999)
+```
+
+```{r}
+plot(G_SY_after.csr)
+```
+
+### L - shijingshan
+
+```{r}
+L_SJS_before = Lest(before_SJS_ppp, correction = "Ripley")
+plot(L_SJS_before, . -r ~ r, 
+     ylab= "L(d)-r", xlab = "d(m)")
 
 ```
 
 ```{r}
+L_SJS_before.csr <- envelope(before_SJS_ppp, Lest, nsim = 39, rank = 1, glocal=TRUE)
 
 ```
 
 ```{r}
+plot(L_SJS_before.csr, . - r ~ r, xlab="d", ylab="L(d)-r")
+
+```
+
+after
+
+```{r}
+L_SJS_aft.csr <- envelope(after_SJS_ppp, Lest, nsim = 39, rank = 1, glocal=TRUE)
 
 ```
 
 ```{r}
+plot(L_SJS_aft.csr, . - r ~ r, xlab="d", ylab="L(d)-r")
+
+```
+
+### L - pinggu
+
+```{r}
+L_PG_before = Lest(before_PG_ppp, correction = "Ripley")
+plot(L_PG_before, . -r ~ r, 
+     ylab= "L(d)-r", xlab = "d(m)")
 
 ```
 
 ```{r}
-
-```
-
-
-# Second order
-
-```{r}
+#| eval: false
+L_PG_before.csr <- envelope(before_PG_ppp, Lest, nsim = 39, rank = 1, glocal=TRUE)
 
 ```
 
 ```{r}
+#| eval: false
+plot(L_PG_before.csr, . - r ~ r, xlab="d", ylab="L(d)-r")
+
+```
+
+![](img/L_PG_beforecsr.png)
+
+after
+
+```{r}
+L_PG_aft.csr <- envelope(after_PG_ppp, Lest, nsim = 39, rank = 1, glocal=TRUE)
 
 ```
 
 ```{r}
+plot(L_PG_aft.csr, . - r ~ r, xlab="d", ylab="L(d)-r")
+
+```
+
+### L - shunyi
+
+```{r}
+L_SY_before = Lest(before_SY_ppp, correction = "Ripley")
+plot(L_SY_before, . -r ~ r, 
+     ylab= "L(d)-r", xlab = "d(m)")
 
 ```
 
 ```{r}
+L_SY_before.csr <- envelope(before_SY_ppp, Lest, nsim = 39, rank = 1, glocal=TRUE)
 
 ```
 
 ```{r}
+plot(L_SY_before.csr, . - r ~ r, xlab="d", ylab="L(d)-r")
 
 ```
 
+after
 
 ```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
+L_SY_aft.csr <- envelope(after_SY_ppp, Lest, nsim = 39, rank = 1, glocal=TRUE)
 
 ```
 
 ```{r}
-
-```
-
-```{r}
-
-```
-
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
-```{r}
+plot(L_SY_aft.csr, . - r ~ r, xlab="d", ylab="L(d)-r")
 
 ```
 
