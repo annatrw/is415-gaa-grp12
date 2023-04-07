@@ -397,14 +397,25 @@ adaptive bandwidth
 ```
 
 # Second order- G and L function
+G function was selected since it measures the distribution of distances from an arbitrary event to its nearest event, hence we will be able to know the clustering pattern of airbnb listings in beijing.
 
-## districts testing
+L function (Besag's 1977) was selected as it is a normalised K function allowing for easier interpretation of results. It measures the distance between a point and its neighbours within each radius
 
-H0: The distribution of the Airbnb Listings are randomly distributed H1: The distribution of the Airbnb Listings are not randomly distributed Confidence level : 95%
+## districts 
+Selected districts are ShiJingShan, PingGu and ShunYi. They were selected based on distance from central beijing; with shijingshan being in / nearest central area, followed by shunyi and pinggu. A district level analysis allows for more indepth analysis into the distribution of airbnb listings in beijing that can yield meaningful results about the randomness and clustering patterns. 
+
+
+H0: The distribution of the Airbnb Listings are randomly distributed 
+H1: The distribution of the Airbnb Listings are not randomly distributed 
+Confidence level : 95%
 
 ### G- shijingshan
 
 https://www.rdocumentation.org/packages/spatstat/versions/1.64-1/topics/Gest
+
+H0: The distribution of the Airbnb Listings are randomly distributed in shijingshan district
+H1: The distribution of the Airbnb Listings are not randomly distributed in shijingshan district
+Confidence level : 95%
 
 ```{r}
 SJS = nbh_sp[nbh_as@data$neighbourhood == "石景山区",]
@@ -448,6 +459,9 @@ G_SJS_after.csr <- envelope(after_SJS_ppp, Gest, nsim = 999)
 plot(G_SJS_after.csr)
 ```
 
+
+For both before and after covid, the observed G(r) is well above the G(theo) as well as the envelope - indicating that Airbnb listings across shijingshan district are clustered. Hence, we reject the null hypothesis that Airbnb listings in shijingshan are randomly distributed at 95% confident interval.
+
 ### G- pinggu
 
 ```{r}
@@ -480,6 +494,10 @@ G_PG_before.csr <- envelope(before_PG_ppp, Gest, nsim = 999)
 plot(G_PG_before.csr)
 ```
 
+- from 0 to 1.7km, the observed G(r) is well above the envelope, hence airbnb listings within this distance are clustered together and we reject the null hypothesis that they are randomly distributed in pinggu district
+- for distances beyond 1.7km, the observed G(r) falls within the upper envelope and greater than the observed G(theo), hence we can conclude the distribution is homogenous/ random.
+
+
 after
 
 CSR test
@@ -491,6 +509,8 @@ G_PG_after.csr <- envelope(after_PG_ppp, Gest, nsim = 999)
 ```{r}
 plot(G_PG_after.csr)
 ```
+
+The observed G(r) is well above the G(theo) as well as the envelope - indicating that Airbnb listings across pinggu district are clustered after covid. Hence, we reject the null hypothesis that Airbnb listings in pinggu are randomly distributed at 95% confident interval.
 
 ### G- shunyi
 
@@ -524,6 +544,8 @@ G_SY_before.csr <- envelope(before_SY_ppp, Gest, nsim = 999)
 plot(G_SY_before.csr)
 ```
 
+The observed G(r) is well above the G(theo) as well as the envelope - indicating that Airbnb listings across shunyi district are clustered after covid. Hence, we reject the null hypothesis that Airbnb listings in shunyi are randomly distributed at 95% confident interval.
+
 after
 
 CSR test
@@ -535,6 +557,9 @@ G_SY_after.csr <- envelope(after_SY_ppp, Gest, nsim = 999)
 ```{r}
 plot(G_SY_after.csr)
 ```
+
+- from 0 to 1.5km and 1.55km to 2km, the observed G(r) is well above the envelope, hence airbnb listings within this distance are clustered together and we reject the null hypothesis that they are randomly distributed in shunyi district
+- at 1.55km and for distances beyond 2km, the observed G(r) falls within the upper envelope and greater than the observed G(theo), hence we can conclude the distribution is homogenous/ random.
 
 ### L - shijingshan
 
@@ -566,6 +591,9 @@ L_SJS_aft.csr <- envelope(after_SJS_ppp, Lest, nsim = 39, rank = 1, glocal=TRUE)
 plot(L_SJS_aft.csr, . - r ~ r, xlab="d", ylab="L(d)-r")
 
 ```
+
+For both before and after covid, the observed L value is well above the corresponding L(theo) and the upper envelope, hence we can conclude there is significant spatial clustering patterns in shijingshan district for both time periods, and we reject the null hypothesis at 95% confidence interval.
+
 
 ### L - pinggu
 
@@ -602,6 +630,8 @@ plot(L_PG_aft.csr, . - r ~ r, xlab="d", ylab="L(d)-r")
 
 ```
 
+For both before and after covid, the observed L value is well above the corresponding L(theo) and the upper envelope, hence we can conclude there is significant spatial clustering patterns in pinggu district for both time periods, and we reject the null hypothesis at 95% confidence interval.
+
 ### L - shunyi
 
 ```{r}
@@ -633,3 +663,5 @@ plot(L_SY_aft.csr, . - r ~ r, xlab="d", ylab="L(d)-r")
 
 ```
 
+- for 0 to 4.8km, the observed L value is well above the corresponding L(theo) and the upper envelope, hence we can conclude there is significant spatial clustering patterns in shunyi district for both time periods, and we reject the null hypothesis at 95% confidence interval.
+- for 4.8km to 5km and for distance beyond 5.8km, the observed L(r) falls within the upper envelope, hence clustering is not significant 
