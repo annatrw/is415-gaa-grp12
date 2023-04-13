@@ -1,5 +1,6 @@
 ---
 title: "Spatial Point Pattern Analysis"
+date-modified: "`r Sys.Date()`"
 format: html
 execute: 
   message: true 
@@ -69,7 +70,7 @@ after_sf <- st_as_sf(after, coords=c("longitude", "latitude"), crs=4326) %>% st_
 ## Geospatial
 
 ```{r}
-nbh_sf <- st_read("data/aspatial/neighbourhoods.geojson") %>%
+nbh_sf <- st_read("data/geospatial/neighbourhoods.geojson") %>%
   st_transform(crs=4555)
 ```
 
@@ -123,7 +124,7 @@ tmap_mode("plot")+
 
 ## Remove excess points falling outside of study area
 
-before covid
+### before covid
 
 ```{r}
 out_before <- before_sf[lengths(st_intersects(before_sf, nbh_sf))==0,]
@@ -140,9 +141,9 @@ tm_shape(out_before) +
           border.lwd=0.5)
 ```
 
-\^before covid data points all inside beijing ploygon yay
+\^before covid data points all inside beijing ploygon hence no need to remove any excess 
 
-after covid
+### after covid
 
 ```{r}
 out <- after_sf[lengths(st_intersects(after_sf, nbh_sf))==0,]
@@ -176,6 +177,7 @@ tm_shape(after_sf) +
 
 # Convert to spatial object
 
+## convert to as_Spatial object
 ```{r}
 before_as <- as_Spatial(before_sf)
 after_as <- as_Spatial(after_sf)
@@ -185,13 +187,14 @@ nbh_as <- as_Spatial(nbh_sf)
 ```{r}
 before_as
 ```
-
+## convert to spatial point object
 ```{r}
 before_sp <- as(before_as, "SpatialPoints")
 after_sp <- as(after_as, "SpatialPoints")
 nbh_sp <- as(nbh_as, "SpatialPolygons")
 ```
 
+transform sp object to correct projection
 ```{r}
 before_sp <- spTransform(before_sp, CRS("+proj=utm +zone=48 +datum=WGS84 +units=m +no_defs"))
 after_sp <- spTransform(after_sp, CRS("+proj=utm +zone=48 +datum=WGS84 +units=m +no_defs"))
@@ -201,7 +204,7 @@ nbh_sp <- spTransform(nbh_sp, CRS("+proj=utm +zone=48 +datum=WGS84 +units=m +no_
 ```{r}
 after_sp
 ```
-
+## convert sp to ppp object
 ```{r}
 before_ppp <- as(before_sp, "ppp")
 after_ppp <- as(after_sp, "ppp")
@@ -216,10 +219,10 @@ plot(after_ppp)
 ```
 
 ```{r}
-summary(before_ppp
-        )
+summary(before_ppp)
 ```
 
+## check ppp for duplicates
 ```{r}
 any(duplicated(before_ppp))
 ```
@@ -251,7 +254,7 @@ tm_shape(after_sf) +
 ```{r}
 tmap_mode("plot")
 ```
-
+## handle duplicated ppp
 ```{r}
 after_ppp_jit <- rjitter(after_ppp, 
                              retry=TRUE, 
@@ -263,7 +266,7 @@ after_ppp_jit <- rjitter(after_ppp,
 any(duplicated(after_ppp_jit))
 ```
 
-## owin object
+## create owin object
 
 ```{r}
 beijing_owin <- as(nbh_sp, "owin")
@@ -319,10 +322,20 @@ kde_after_Beijing_bw <- density(after_ppp_Beijing_km,
 ```
 
 ```{r}
+write_rds(kde_before_Beijing_bw, "data/rds/kde_before_Beijing_bw.rds")
+```
+
+```{r}
+write_rds(kde_after_Beijing_bw, "data/rds/kde_after_Beijing_bw.rds")
+```
+
+```{r}
+kde_before_Beijing_bw <- read_rds("data/rds/kde_before_Beijing_bw.rds")
 plot(kde_before_Beijing_bw)
 ```
 
 ```{r}
+kde_after_Beijing_bw <- read_rds("data/rds/kde_after_Beijing_bw.rds")
 plot(kde_after_Beijing_bw)
 ```
 
@@ -342,14 +355,29 @@ kde_after_Beijing_bw_raster
 ```
 
 ```{r}
-projection(kde_before_Beijing_bw_raster) <- CRS("+init=EPSG:3414 +datum=WGS84 +units=km")
-projection(kde_after_Beijing_bw_raster) <- CRS("+init=EPSG:3414 +datum=WGS84 +units=km")
+projection(kde_before_Beijing_bw_raster) <- CRS("+proj=utm +zone=48 +datum=WGS84 +units=km")
+projection(kde_after_Beijing_bw_raster) <- CRS("+proj=utm +zone=48 +datum=WGS84 +units=km")
 
+```
+
+```{r}
+write_rds(kde_before_Beijing_bw_raster, "data/rds/kde_before_Beijing_bw_raster.rds")
+```
+
+```{r}
+write_rds(kde_after_Beijing_bw_raster, "data/rds/kde_after_Beijing_bw_raster.rds")
+```
+
+```{r}
+kde_before_Beijing_bw_raster <- read_rds("data/rds/kde_before_Beijing_bw_raster.rds")
+
+kde_after_Beijing_bw_raster <- read_rds("data/rds/kde_after_Beijing_bw_raster.rds")
 ```
 
 graphing on open street map
 
 ```{r}
+kde_before_Beijing_bw_raster_map <- 
 tm_basemap("OpenStreetMap") +
 tm_shape(kde_before_Beijing_bw_raster) +
   tm_raster("v", alpha=0.65) + 
@@ -363,6 +391,16 @@ tm_shape(kde_before_Beijing_bw_raster) +
 ```
 
 ```{r}
+write_rds(kde_before_Beijing_bw_raster_map, "data/rds/kde_before_Beijing_bw_raster_map.rds")
+```
+
+```{r}
+kde_before_Beijing_bw_raster_map <- read_rds("data/rds/kde_before_Beijing_bw_raster_map.rds")
+kde_before_Beijing_bw_raster_map
+```
+
+```{r}
+kde_after_Beijing_bw_raster_map <- 
 tm_basemap("OpenStreetMap") +
 tm_shape(kde_after_Beijing_bw_raster) +
   tm_raster("v", alpha=0.65) + 
@@ -375,31 +413,29 @@ tm_shape(kde_after_Beijing_bw_raster) +
             frame = FALSE)
 ```
 
+
+```{r}
+write_rds(kde_after_Beijing_bw_raster_map, "data/rds/kde_after_Beijing_bw_raster_map.rds")
+```
+
+```{r}
+kde_after_Beijing_bw_raster_map <- read_rds("data/rds/kde_after_Beijing_bw_raster_map.rds")
+kde_after_Beijing_bw_raster_map
+```
+
 analysis: https://is415-msty.netlify.app/posts/2021-09-19-take-home-exercise-2/?panelset7=base5&panelset11=tourism3#kernel-density-maps-analysis-1
 
-```{r}
-
-```
-
-adaptive bandwidth
-
-```{r}
-#kde_childcareSG_adaptive <- adaptive.density(childcareSG_ppp.km, method="kernel")
-#plot(kde_childcareSG_adaptive)
-```
-
-```{r}
-
-```
-
-```{r}
-
-```
 
 # Second order- G and L function
+
+
 G function was selected since it measures the distribution of distances from an arbitrary event to its nearest event, hence we will be able to know the clustering pattern of airbnb listings in beijing.
 
 L function (Besag's 1977) was selected as it is a normalised K function allowing for easier interpretation of results. It measures the distance between a point and its neighbours within each radius
+
+reference if needed
+- https://pro.arcgis.com/en/pro-app/3.0/tool-reference/spatial-statistics/h-how-multi-distance-spatial-cluster-analysis-ripl.htm#:~:text=The%20weighted%20K%2Dfunction%20shows,with%20its%20own%20confidence%20envelope).
+- https://cran.r-project.org/web/packages/spNetwork/vignettes/KNetworkFunctions.html#:~:text=The%20cross%2DK%2Dfunction%20is,dij%E2%89%A4r%7D
 
 ## districts 
 Selected districts are ShiJingShan, PingGu and ShunYi. They were selected based on distance from central beijing; with shijingshan being in / nearest central area, followed by shunyi and pinggu. A district level analysis allows for more indepth analysis into the distribution of airbnb listings in beijing that can yield meaningful results about the randomness and clustering patterns. 
@@ -430,32 +466,48 @@ after_SJS_ppp = after_ppp_jit[SJS_owin]
 
 ```
 
-before
+#### before static
 
 ```{r}
-G_SJS_before = Gest(before_SJS_ppp, correction = "best")
+G_SJS_before = Gest(before_SJS_ppp, correction="best")
 plot(G_SJS_before)
 ```
 
 CSR test
 
 ```{r}
-G_SJS_before.csr <- envelope(before_SJS_ppp, Gest, nsim = 999)
+G_SJS_before.csr <- envelope(before_SJS_ppp, Gest, nsim = 39)
 ```
 
 ```{r}
+write_rds(G_SJS_before.csr, "data/rds/G_SJS_beforecsr.rds")
+```
+
+```{r}
+G_SJS_before.csr <- read_rds("data/rds/G_SJS_beforecsr.rds")
 plot(G_SJS_before.csr)
 ```
 
-after
+#### interactive test
+
+```{r}
+
+```
+
+
+#### after static
 
 CSR test
 
 ```{r}
-G_SJS_after.csr <- envelope(after_SJS_ppp, Gest, nsim = 999)
+G_SJS_after.csr <- envelope(after_SJS_ppp, Gest, nsim = 39)
+```
+```{r}
+write_rds(G_SJS_after.csr, "data/rds/G_SJS_aftercsr.rds")
 ```
 
 ```{r}
+G_SJS_after.csr <- read_rds("data/rds/G_SJS_aftercsr.rds")
 plot(G_SJS_after.csr)
 ```
 
@@ -477,7 +529,7 @@ after_PG_ppp = after_ppp_jit[PG_owin]
 
 ```
 
-before
+#### before static
 
 ```{r}
 G_PG_before = Gest(before_PG_ppp, correction = "border")
@@ -487,30 +539,40 @@ plot(G_PG_before)
 CSR test
 
 ```{r}
-G_PG_before.csr <- envelope(before_PG_ppp, Gest, nsim = 999)
+G_PG_before.csr <- envelope(before_PG_ppp, Gest, nsim = 39)
+```
+```{r}
+write_rds(G_PG_before.csr, "data/rds/G_PG_beforecsr.rds")
 ```
 
 ```{r}
+G_PG_before.csr <- read_rds("data/rds/G_PG_beforecsr.rds")
 plot(G_PG_before.csr)
 ```
 
-- from 0 to 1.7km, the observed G(r) is well above the envelope, hence airbnb listings within this distance are clustered together and we reject the null hypothesis that they are randomly distributed in pinggu district
-- for distances beyond 1.7km, the observed G(r) falls within the upper envelope and greater than the observed G(theo), hence we can conclude the distribution is homogenous/ random.
+- from 0 to 2km, the observed G(r) is well above the envelope, hence airbnb listings within this distance are clustered together and we reject the null hypothesis that they are randomly distributed in pinggu district
+- for distances beyond 2km, the observed G(r) falls within the upper envelope and greater than the observed G(theo), hence we can conclude the distribution is homogenous/ random.
 
 
-after
+#### after static
 
 CSR test
 
 ```{r}
-G_PG_after.csr <- envelope(after_PG_ppp, Gest, nsim = 999)
+G_PG_after.csr <- envelope(after_PG_ppp, Gest, nsim = 39)
+```
+```{r}
+write_rds(G_PG_after.csr, "data/rds/G_PG_aftercsr.rds")
 ```
 
 ```{r}
+G_PG_after.csr <- read_rds("data/rds/G_PG_aftercsr.rds")
 plot(G_PG_after.csr)
 ```
 
-The observed G(r) is well above the G(theo) as well as the envelope - indicating that Airbnb listings across pinggu district are clustered after covid. Hence, we reject the null hypothesis that Airbnb listings in pinggu are randomly distributed at 95% confident interval.
+- from 0 to 1.5km, the observed G(r) is well above the G(theo) as well as the envelope - indicating that Airbnb listings across pinggu district are clustered after covid. Hence, we reject the null hypothesis that Airbnb listings in pinggu are randomly distributed at 95% confident interval.
+- for distances beyond 1.5km, the observed G(r) falls within the upper envelope and greater than the observed G(theo), hence we can conclude the distribution is homogenous/ random.
+
 
 ### G- shunyi
 
@@ -527,42 +589,54 @@ after_SY_ppp = after_ppp_jit[SY_owin]
 
 ```
 
-before
+#### before static
 
 ```{r}
-G_SY_before = Gest(before_SY_ppp, correction = "border")
+G_SY_before = Gest(before_SY_ppp, correction = "best")
 plot(G_SY_before, xlim=c(0,500))
 ```
 
 CSR test
 
 ```{r}
-G_SY_before.csr <- envelope(before_SY_ppp, Gest, nsim = 999)
+G_SY_before.csr <- envelope(before_SY_ppp, Gest, nsim = 39)
+```
+```{r}
+write_rds(G_SY_before.csr, "data/rds/G_SY_beforecsr.rds")
 ```
 
 ```{r}
+G_SY_before.csr <- read_rds("data/rds/G_SY_beforecsr.rds")
 plot(G_SY_before.csr)
 ```
 
+
 The observed G(r) is well above the G(theo) as well as the envelope - indicating that Airbnb listings across shunyi district are clustered after covid. Hence, we reject the null hypothesis that Airbnb listings in shunyi are randomly distributed at 95% confident interval.
 
-after
+#### after static
 
 CSR test
 
 ```{r}
-G_SY_after.csr <- envelope(after_SY_ppp, Gest, nsim = 999)
+G_SY_after.csr <- envelope(after_SY_ppp, Gest, nsim = 39)
+```
+```{r}
+write_rds(G_SY_after.csr, "data/rds/G_SY_aftercsr.rds")
 ```
 
 ```{r}
+G_SY_after.csr <- read_rds("data/rds/G_SY_aftercsr.rds")
 plot(G_SY_after.csr)
 ```
 
-- from 0 to 1.5km and 1.55km to 2km, the observed G(r) is well above the envelope, hence airbnb listings within this distance are clustered together and we reject the null hypothesis that they are randomly distributed in shunyi district
-- at 1.55km and for distances beyond 2km, the observed G(r) falls within the upper envelope and greater than the observed G(theo), hence we can conclude the distribution is homogenous/ random.
+
+- from 0 to 2.25km, the observed G(r) is well above the envelope, hence airbnb listings within this distance are clustered together and we reject the null hypothesis that they are randomly distributed in shunyi district
+- for distances beyond 2.25km, the observed G(r) falls within the upper envelope and greater than the observed G(theo), hence we can conclude the distribution is homogenous/ random.
+
 
 ### L - shijingshan
 
+#### before static
 ```{r}
 L_SJS_before = Lest(before_SJS_ppp, correction = "Ripley")
 plot(L_SJS_before, . -r ~ r, 
@@ -576,11 +650,81 @@ L_SJS_before.csr <- envelope(before_SJS_ppp, Lest, nsim = 39, rank = 1, glocal=T
 ```
 
 ```{r}
-plot(L_SJS_before.csr, . - r ~ r, xlab="d", ylab="L(d)-r")
-
+write_rds(L_SJS_before.csr, "data/rds/L_SJS_beforecsr.rds")
 ```
 
-after
+```{r}
+L_SJS_before.csr <- read_rds("data/rds/L_SJS_beforecsr.rds")
+plot(L_SJS_before.csr, . - r ~ r, xlab="d", ylab="L(d)-r")
+```
+
+
+#### before interactive test
+
+referencing senior's work here: https://rpubs.com/deniseadele/secondorder_pointpattern
+
+```{r}
+library(ggthemes)
+title <- "ShiJingShan: L function before Covid"
+
+Lcsr_SJS_befdf <- as.data.frame(L_SJS_before.csr)
+
+colour=c("#0D657D","#ee770d","#D3D3D3")
+csr_plot <- ggplot(Lcsr_SJS_befdf, aes(r, obs-r))+
+  # plot observed value
+  geom_line(colour=c("#4d4d4d"))+
+  geom_line(aes(r,theo-r), colour="red", linetype = "dashed")+
+  # plot simulation envelopes
+  geom_ribbon(aes(ymin=lo-r,ymax=hi-r),alpha=0.1, colour=c("#91bfdb")) +
+  xlab("Distance r (m)") +
+  ylab("L(r)-r") +
+  geom_rug(data=Lcsr_SJS_befdf[Lcsr_SJS_befdf$obs > Lcsr_SJS_befdf$hi,], sides="b", colour=colour[1])  +
+  geom_rug(data=Lcsr_SJS_befdf[Lcsr_SJS_befdf$obs < Lcsr_SJS_befdf$lo,], sides="b", colour=colour[2]) +
+  geom_rug(data=Lcsr_SJS_befdf[Lcsr_SJS_befdf$obs >= Lcsr_SJS_befdf$lo & Lcsr_SJS_befdf$obs <= Lcsr_SJS_befdf$hi,], sides="b", color=colour[3]) +
+  theme_tufte()+
+  ggtitle(title)
+
+text1<-"Significant clustering"
+text2<-"Significant segregation"
+text3<-"Not significant clustering/segregation"
+
+# the below conditional statement is required to ensure that the labels (text1/2/3) are assigned to the correct traces
+if (nrow(Lcsr_SJS_befdf[Lcsr_SJS_befdf$obs > Lcsr_SJS_befdf$hi,])==0){ 
+  if (nrow(Lcsr_SJS_befdf[Lcsr_SJS_befdf$obs < Lcsr_SJS_befdf$lo,])==0){ 
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text3, traces = 4) %>%
+      rangeslider() 
+  }else if (nrow(Lcsr_SJS_befdf[Lcsr_SJS_befdf$obs >= Lcsr_SJS_befdf$lo & Lcsr_SJS_befdf$obs <= Lcsr_SJS_befdf$hi,])==0){ 
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text2, traces = 4) %>%
+      rangeslider() 
+  }else {
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text2, traces = 4) %>%
+      style(text = text3, traces = 5) %>%
+      rangeslider() 
+  }
+} else if (nrow(Lcsr_SJS_befdf[Lcsr_SJS_befdf$obs < Lcsr_SJS_befdf$lo,])==0){
+  if (nrow(Lcsr_SJS_befdf[Lcsr_SJS_befdf$obs >= Lcsr_SJS_befdf$lo & Lcsr_SJS_befdf$obs <= Lcsr_SJS_befdf$hi,])==0){
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text1, traces = 4) %>%
+      rangeslider() 
+  } else{
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text1, traces = 4) %>%
+      style(text = text3, traces = 5) %>%
+      rangeslider()
+  }
+} else{
+  ggplotly(csr_plot, dynamicTicks=T) %>%
+    style(text = text1, traces = 4) %>%
+    style(text = text2, traces = 5) %>%
+    style(text = text3, traces = 6) %>%
+    rangeslider()
+  }
+```
+
+#### after static
 
 ```{r}
 L_SJS_aft.csr <- envelope(after_SJS_ppp, Lest, nsim = 39, rank = 1, glocal=TRUE)
@@ -588,15 +732,84 @@ L_SJS_aft.csr <- envelope(after_SJS_ppp, Lest, nsim = 39, rank = 1, glocal=TRUE)
 ```
 
 ```{r}
-plot(L_SJS_aft.csr, . - r ~ r, xlab="d", ylab="L(d)-r")
-
+write_rds(L_SJS_aft.csr, "data/rds/L_SJS_aftcsr.rds")
 ```
+
+```{r}
+L_SJS_aft.csr <- read_rds("data/rds/L_SJS_aftcsr.rds")
+plot(L_SJS_aft.csr, . - r ~ r, xlab="d", ylab="L(d)-r")
+```
+
 
 For both before and after covid, the observed L value is well above the corresponding L(theo) and the upper envelope, hence we can conclude there is significant spatial clustering patterns in shijingshan district for both time periods, and we reject the null hypothesis at 95% confidence interval.
 
 
+#### after interactive
+
+```{r}
+library(ggthemes)
+title <- "ShiJingShan: L function after Covid"
+
+Lcsr_SJS_aftdf <- as.data.frame(L_SJS_aft.csr)
+
+colour=c("#0D657D","#ee770d","#D3D3D3")
+csr_plot <- ggplot(Lcsr_SJS_aftdf, aes(r, obs-r))+
+  # plot observed value
+  geom_line(colour=c("#4d4d4d"))+
+  geom_line(aes(r,theo-r), colour="red", linetype = "dashed")+
+  # plot simulation envelopes
+  geom_ribbon(aes(ymin=lo-r,ymax=hi-r),alpha=0.1, colour=c("#91bfdb")) +
+  xlab("Distance r (m)") +
+  ylab("L(r)-r") +
+  geom_rug(data=Lcsr_SJS_aftdf[Lcsr_SJS_aftdf$obs > Lcsr_SJS_aftdf$hi,], sides="b", colour=colour[1])  +
+  geom_rug(data=Lcsr_SJS_aftdf[Lcsr_SJS_aftdf$obs < Lcsr_SJS_aftdf$lo,], sides="b", colour=colour[2]) +
+  geom_rug(data=Lcsr_SJS_aftdf[Lcsr_SJS_aftdf$obs >= Lcsr_SJS_aftdf$lo & Lcsr_SJS_aftdf$obs <= Lcsr_SJS_aftdf$hi,], sides="b", color=colour[3]) +
+  theme_tufte()+
+  ggtitle(title)
+
+text1<-"Significant clustering"
+text2<-"Significant segregation"
+text3<-"Not significant clustering/segregation"
+
+# the below conditional statement is required to ensure that the labels (text1/2/3) are assigned to the correct traces
+if (nrow(Lcsr_SJS_aftdf[Lcsr_SJS_aftdf$obs > Lcsr_SJS_aftdf$hi,])==0){ 
+  if (nrow(Lcsr_SJS_aftdf[Lcsr_SJS_aftdf$obs < Lcsr_SJS_aftdf$lo,])==0){ 
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text3, traces = 4) %>%
+      rangeslider() 
+  }else if (nrow(Lcsr_SJS_aftdf[Lcsr_SJS_aftdf$obs >= Lcsr_SJS_aftdf$lo & Lcsr_SJS_aftdf$obs <= Lcsr_SJS_aftdf$hi,])==0){ 
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text2, traces = 4) %>%
+      rangeslider() 
+  }else {
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text2, traces = 4) %>%
+      style(text = text3, traces = 5) %>%
+      rangeslider() 
+  }
+} else if (nrow(Lcsr_SJS_aftdf[Lcsr_SJS_aftdf$obs < Lcsr_SJS_aftdf$lo,])==0){
+  if (nrow(Lcsr_SJS_aftdf[Lcsr_SJS_aftdf$obs >= Lcsr_SJS_aftdf$lo & Lcsr_SJS_aftdf$obs <= Lcsr_SJS_aftdf$hi,])==0){
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text1, traces = 4) %>%
+      rangeslider() 
+  } else{
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text1, traces = 4) %>%
+      style(text = text3, traces = 5) %>%
+      rangeslider()
+  }
+} else{
+  ggplotly(csr_plot, dynamicTicks=T) %>%
+    style(text = text1, traces = 4) %>%
+    style(text = text2, traces = 5) %>%
+    style(text = text3, traces = 6) %>%
+    rangeslider()
+  }
+```
+
 ### L - pinggu
 
+#### before static
 ```{r}
 L_PG_before = Lest(before_PG_ppp, correction = "Ripley")
 plot(L_PG_before, . -r ~ r, 
@@ -605,20 +818,86 @@ plot(L_PG_before, . -r ~ r,
 ```
 
 ```{r}
-#| eval: false
 L_PG_before.csr <- envelope(before_PG_ppp, Lest, nsim = 39, rank = 1, glocal=TRUE)
 
 ```
 
 ```{r}
-#| eval: false
-plot(L_PG_before.csr, . - r ~ r, xlab="d", ylab="L(d)-r")
-
+write_rds(L_PG_before.csr, "data/rds/L_PG_beforecsr.rds")
 ```
 
-![](img/L_PG_beforecsr.png)
+```{r}
+L_PG_before.csr <- read_rds("data/rds/L_PG_beforecsr.rds")
+plot(L_PG_before.csr, . - r ~ r, xlab="d", ylab="L(d)-r")
+```
+- for distance 1 to 7km, the L function is well above the upper envelope, hence we can reject the null hypothesis and conclude airbnb listings are clustered in pinggu for this distance range
+- for distance between 7km to 9.8km, the L function is within the upper envelope but greater than the observed value (L theo), hence spatial clustering is statistically not significant and we cannot reject the null hypothesis. Listings are randomly distributed and independent of each other at this distance range.
+- for distance beyond 9.8km, the L function is below the lower envelope, hence we conclude that spatial dispersion is significant for this distance range.
 
-after
+#### before interactive
+
+```{r}
+library(ggthemes)
+title <- "PingGu: L function before Covid"
+
+Lcsr_PG_befdf <- as.data.frame(L_PG_before.csr)
+
+colour=c("#0D657D","#ee770d","#D3D3D3")
+csr_plot <- ggplot(Lcsr_PG_befdf, aes(r, obs-r))+
+  # plot observed value
+  geom_line(colour=c("#4d4d4d"))+
+  geom_line(aes(r,theo-r), colour="red", linetype = "dashed")+
+  # plot simulation envelopes
+  geom_ribbon(aes(ymin=lo-r,ymax=hi-r),alpha=0.1, colour=c("#91bfdb")) +
+  xlab("Distance r (m)") +
+  ylab("L(r)-r") +
+  geom_rug(data=Lcsr_PG_befdf[Lcsr_PG_befdf$obs > Lcsr_PG_befdf$hi,], sides="b", colour=colour[1])  +
+  geom_rug(data=Lcsr_PG_befdf[Lcsr_PG_befdf$obs < Lcsr_PG_befdf$lo,], sides="b", colour=colour[2]) +
+  geom_rug(data=Lcsr_PG_befdf[Lcsr_PG_befdf$obs >= Lcsr_PG_befdf$lo & Lcsr_PG_befdf$obs <= Lcsr_PG_befdf$hi,], sides="b", color=colour[3]) +
+  theme_tufte()+
+  ggtitle(title)
+
+text1<-"Significant clustering"
+text2<-"Significant segregation"
+text3<-"Not significant clustering/segregation"
+
+# the below conditional statement is required to ensure that the labels (text1/2/3) are assigned to the correct traces
+if (nrow(Lcsr_PG_befdf[Lcsr_PG_befdf$obs > Lcsr_PG_befdf$hi,])==0){ 
+  if (nrow(Lcsr_PG_befdf[Lcsr_PG_befdf$obs < Lcsr_PG_befdf$lo,])==0){ 
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text3, traces = 4) %>%
+      rangeslider() 
+  }else if (nrow(Lcsr_PG_befdf[Lcsr_PG_befdf$obs >= Lcsr_PG_befdf$lo & Lcsr_PG_befdf$obs <= Lcsr_PG_befdf$hi,])==0){ 
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text2, traces = 4) %>%
+      rangeslider() 
+  }else {
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text2, traces = 4) %>%
+      style(text = text3, traces = 5) %>%
+      rangeslider() 
+  }
+} else if (nrow(Lcsr_PG_befdf[Lcsr_PG_befdf$obs < Lcsr_PG_befdf$lo,])==0){
+  if (nrow(Lcsr_PG_befdf[Lcsr_PG_befdf$obs >= Lcsr_PG_befdf$lo & Lcsr_PG_befdf$obs <= Lcsr_PG_befdf$hi,])==0){
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text1, traces = 4) %>%
+      rangeslider() 
+  } else{
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text1, traces = 4) %>%
+      style(text = text3, traces = 5) %>%
+      rangeslider()
+  }
+} else{
+  ggplotly(csr_plot, dynamicTicks=T) %>%
+    style(text = text1, traces = 4) %>%
+    style(text = text2, traces = 5) %>%
+    style(text = text3, traces = 6) %>%
+    rangeslider()
+  }
+```
+
+#### after static
 
 ```{r}
 L_PG_aft.csr <- envelope(after_PG_ppp, Lest, nsim = 39, rank = 1, glocal=TRUE)
@@ -626,14 +905,84 @@ L_PG_aft.csr <- envelope(after_PG_ppp, Lest, nsim = 39, rank = 1, glocal=TRUE)
 ```
 
 ```{r}
-plot(L_PG_aft.csr, . - r ~ r, xlab="d", ylab="L(d)-r")
+write_rds(L_PG_aft.csr, "data/rds/L_PG_aftcsr.rds")
+```
 
+```{r}
+L_PG_aft.csr <- read_rds("data/rds/L_PG_aftcsr.rds")
+plot(L_PG_aft.csr, . - r ~ r, xlab="d", ylab="L(d)-r")
 ```
 
 For both before and after covid, the observed L value is well above the corresponding L(theo) and the upper envelope, hence we can conclude there is significant spatial clustering patterns in pinggu district for both time periods, and we reject the null hypothesis at 95% confidence interval.
 
+
+#### after interactive
+
+```{r}
+library(ggthemes)
+title <- "PingGu: L function after Covid"
+
+Lcsr_PG_aftdf <- as.data.frame(L_PG_aft.csr)
+
+colour=c("#0D657D","#ee770d","#D3D3D3")
+csr_plot <- ggplot(Lcsr_PG_aftdf, aes(r, obs-r))+
+  # plot observed value
+  geom_line(colour=c("#4d4d4d"))+
+  geom_line(aes(r,theo-r), colour="red", linetype = "dashed")+
+  # plot simulation envelopes
+  geom_ribbon(aes(ymin=lo-r,ymax=hi-r),alpha=0.1, colour=c("#91bfdb")) +
+  xlab("Distance r (m)") +
+  ylab("L(r)-r") +
+  geom_rug(data=Lcsr_PG_aftdf[Lcsr_PG_aftdf$obs > Lcsr_PG_aftdf$hi,], sides="b", colour=colour[1])  +
+  geom_rug(data=Lcsr_PG_aftdf[Lcsr_PG_aftdf$obs < Lcsr_PG_aftdf$lo,], sides="b", colour=colour[2]) +
+  geom_rug(data=Lcsr_PG_aftdf[Lcsr_PG_aftdf$obs >= Lcsr_PG_aftdf$lo & Lcsr_PG_aftdf$obs <= Lcsr_PG_aftdf$hi,], sides="b", color=colour[3]) +
+  theme_tufte()+
+  ggtitle(title)
+
+text1<-"Significant clustering"
+text2<-"Significant segregation"
+text3<-"Not significant clustering/segregation"
+
+# the below conditional statement is required to ensure that the labels (text1/2/3) are assigned to the correct traces
+if (nrow(Lcsr_PG_aftdf[Lcsr_PG_aftdf$obs > Lcsr_PG_aftdf$hi,])==0){ 
+  if (nrow(Lcsr_PG_aftdf[Lcsr_PG_aftdf$obs < Lcsr_PG_aftdf$lo,])==0){ 
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text3, traces = 4) %>%
+      rangeslider() 
+  }else if (nrow(Lcsr_PG_aftdf[Lcsr_PG_aftdf$obs >= Lcsr_PG_aftdf$lo & Lcsr_PG_aftdf$obs <= Lcsr_PG_aftdf$hi,])==0){ 
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text2, traces = 4) %>%
+      rangeslider() 
+  }else {
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text2, traces = 4) %>%
+      style(text = text3, traces = 5) %>%
+      rangeslider() 
+  }
+} else if (nrow(Lcsr_PG_aftdf[Lcsr_PG_aftdf$obs < Lcsr_PG_aftdf$lo,])==0){
+  if (nrow(Lcsr_PG_aftdf[Lcsr_PG_aftdf$obs >= Lcsr_PG_aftdf$lo & Lcsr_PG_aftdf$obs <= Lcsr_PG_aftdf$hi,])==0){
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text1, traces = 4) %>%
+      rangeslider() 
+  } else{
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text1, traces = 4) %>%
+      style(text = text3, traces = 5) %>%
+      rangeslider()
+  }
+} else{
+  ggplotly(csr_plot, dynamicTicks=T) %>%
+    style(text = text1, traces = 4) %>%
+    style(text = text2, traces = 5) %>%
+    style(text = text3, traces = 6) %>%
+    rangeslider()
+  }
+```
+
+
 ### L - shunyi
 
+#### before static
 ```{r}
 L_SY_before = Lest(before_SY_ppp, correction = "Ripley")
 plot(L_SY_before, . -r ~ r, 
@@ -647,21 +996,156 @@ L_SY_before.csr <- envelope(before_SY_ppp, Lest, nsim = 39, rank = 1, glocal=TRU
 ```
 
 ```{r}
-plot(L_SY_before.csr, . - r ~ r, xlab="d", ylab="L(d)-r")
-
+write_rds(L_SY_before.csr, "data/rds/L_SY_beforecsr.rds")
 ```
 
-after
+```{r}
+L_SY_before.csr <- read_rds("data/rds/L_SY_beforecsr.rds")
+plot(L_SY_before.csr, . - r ~ r, xlab="d", ylab="L(d)-r")
+```
+
+#### before interactive
+
+```{r}
+library(ggthemes)
+title <- "ShunYi: L function before Covid"
+
+Lcsr_SY_befdf <- as.data.frame(L_SY_before.csr)
+
+colour=c("#0D657D","#ee770d","#D3D3D3")
+csr_plot <- ggplot(Lcsr_SY_befdf, aes(r, obs-r))+
+  # plot observed value
+  geom_line(colour=c("#4d4d4d"))+
+  geom_line(aes(r,theo-r), colour="red", linetype = "dashed")+
+  # plot simulation envelopes
+  geom_ribbon(aes(ymin=lo-r,ymax=hi-r),alpha=0.1, colour=c("#91bfdb")) +
+  xlab("Distance r (m)") +
+  ylab("L(r)-r") +
+  geom_rug(data=Lcsr_SY_befdf[Lcsr_SY_befdf$obs > Lcsr_SY_befdf$hi,], sides="b", colour=colour[1])  +
+  geom_rug(data=Lcsr_SY_befdf[Lcsr_SY_befdf$obs < Lcsr_SY_befdf$lo,], sides="b", colour=colour[2]) +
+  geom_rug(data=Lcsr_SY_befdf[Lcsr_SY_befdf$obs >= Lcsr_SY_befdf$lo & Lcsr_SY_befdf$obs <= Lcsr_SY_befdf$hi,], sides="b", color=colour[3]) +
+  theme_tufte()+
+  ggtitle(title)
+
+text1<-"Significant clustering"
+text2<-"Significant segregation"
+text3<-"Not significant clustering/segregation"
+
+# the below conditional statement is required to ensure that the labels (text1/2/3) are assigned to the correct traces
+if (nrow(Lcsr_SY_befdf[Lcsr_SY_befdf$obs > Lcsr_SY_befdf$hi,])==0){ 
+  if (nrow(Lcsr_SY_befdf[Lcsr_SY_befdf$obs < Lcsr_SY_befdf$lo,])==0){ 
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text3, traces = 4) %>%
+      rangeslider() 
+  }else if (nrow(Lcsr_SY_befdf[Lcsr_SY_befdf$obs >= Lcsr_SY_befdf$lo & Lcsr_SY_befdf$obs <= Lcsr_SY_befdf$hi,])==0){ 
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text2, traces = 4) %>%
+      rangeslider() 
+  }else {
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text2, traces = 4) %>%
+      style(text = text3, traces = 5) %>%
+      rangeslider() 
+  }
+} else if (nrow(Lcsr_SY_befdf[Lcsr_SY_befdf$obs < Lcsr_SY_befdf$lo,])==0){
+  if (nrow(Lcsr_SY_befdf[Lcsr_SY_befdf$obs >= Lcsr_SY_befdf$lo & Lcsr_SY_befdf$obs <= Lcsr_SY_befdf$hi,])==0){
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text1, traces = 4) %>%
+      rangeslider() 
+  } else{
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text1, traces = 4) %>%
+      style(text = text3, traces = 5) %>%
+      rangeslider()
+  }
+} else{
+  ggplotly(csr_plot, dynamicTicks=T) %>%
+    style(text = text1, traces = 4) %>%
+    style(text = text2, traces = 5) %>%
+    style(text = text3, traces = 6) %>%
+    rangeslider()
+  }
+```
+
+
+#### after static
 
 ```{r}
 L_SY_aft.csr <- envelope(after_SY_ppp, Lest, nsim = 39, rank = 1, glocal=TRUE)
 
 ```
-
 ```{r}
-plot(L_SY_aft.csr, . - r ~ r, xlab="d", ylab="L(d)-r")
-
+write_rds(L_SY_aft.csr, "data/rds/L_SY_aftcsr.rds")
 ```
 
-- for 0 to 4.8km, the observed L value is well above the corresponding L(theo) and the upper envelope, hence we can conclude there is significant spatial clustering patterns in shunyi district for both time periods, and we reject the null hypothesis at 95% confidence interval.
-- for 4.8km to 5km and for distance beyond 5.8km, the observed L(r) falls within the upper envelope, hence clustering is not significant 
+```{r}
+L_SY_aft.csr <- read_rds("data/rds/L_SY_aftcsr.rds")
+plot(L_SY_aft.csr, . - r ~ r, xlab="d", ylab="L(d)-r")
+```
+
+
+- for 0 to 6.5km, the observed L value is well above the corresponding L(theo) and the upper envelope, hence we can conclude there is significant spatial clustering patterns in shunyi district for both time periods, and we reject the null hypothesis at 95% confidence interval.
+- for distance beyond 6.5km, the observed L(r) falls within the upper envelope, hence clustering is not significant 
+
+#### after interactive
+
+```{r}
+library(ggthemes)
+title <- "ShunYi: L function after Covid"
+
+Lcsr_SY_aftdf <- as.data.frame(L_SY_aft.csr)
+
+colour=c("#0D657D","#ee770d","#D3D3D3")
+csr_plot <- ggplot(Lcsr_SY_aftdf, aes(r, obs-r))+
+  # plot observed value
+  geom_line(colour=c("#4d4d4d"))+
+  geom_line(aes(r,theo-r), colour="red", linetype = "dashed")+
+  # plot simulation envelopes
+  geom_ribbon(aes(ymin=lo-r,ymax=hi-r),alpha=0.1, colour=c("#91bfdb")) +
+  xlab("Distance r (m)") +
+  ylab("L(r)-r") +
+  geom_rug(data=Lcsr_SY_aftdf[Lcsr_SY_aftdf$obs > Lcsr_SY_aftdf$hi,], sides="b", colour=colour[1])  +
+  geom_rug(data=Lcsr_SY_aftdf[Lcsr_SY_aftdf$obs < Lcsr_SY_aftdf$lo,], sides="b", colour=colour[2]) +
+  geom_rug(data=Lcsr_SY_aftdf[Lcsr_SY_aftdf$obs >= Lcsr_SY_aftdf$lo & Lcsr_SY_aftdf$obs <= Lcsr_SY_aftdf$hi,], sides="b", color=colour[3]) +
+  theme_tufte()+
+  ggtitle(title)
+
+text1<-"Significant clustering"
+text2<-"Significant segregation"
+text3<-"Not significant clustering/segregation"
+
+# the below conditional statement is required to ensure that the labels (text1/2/3) are assigned to the correct traces
+if (nrow(Lcsr_SY_aftdf[Lcsr_SY_aftdf$obs > Lcsr_SY_aftdf$hi,])==0){ 
+  if (nrow(Lcsr_SY_aftdf[Lcsr_SY_aftdf$obs < Lcsr_SY_aftdf$lo,])==0){ 
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text3, traces = 4) %>%
+      rangeslider() 
+  }else if (nrow(Lcsr_SY_aftdf[Lcsr_SY_aftdf$obs >= Lcsr_SY_aftdf$lo & Lcsr_SY_aftdf$obs <= Lcsr_SY_aftdf$hi,])==0){ 
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text2, traces = 4) %>%
+      rangeslider() 
+  }else {
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text2, traces = 4) %>%
+      style(text = text3, traces = 5) %>%
+      rangeslider() 
+  }
+} else if (nrow(Lcsr_SY_aftdf[Lcsr_SY_aftdf$obs < Lcsr_SY_aftdf$lo,])==0){
+  if (nrow(Lcsr_SY_aftdf[Lcsr_SY_aftdf$obs >= Lcsr_SY_aftdf$lo & Lcsr_SY_aftdf$obs <= Lcsr_SY_aftdf$hi,])==0){
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text1, traces = 4) %>%
+      rangeslider() 
+  } else{
+    ggplotly(csr_plot, dynamicTicks=T) %>%
+      style(text = text1, traces = 4) %>%
+      style(text = text3, traces = 5) %>%
+      rangeslider()
+  }
+} else{
+  ggplotly(csr_plot, dynamicTicks=T) %>%
+    style(text = text1, traces = 4) %>%
+    style(text = text2, traces = 5) %>%
+    style(text = text3, traces = 6) %>%
+    rangeslider()
+  }
+```
