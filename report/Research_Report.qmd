@@ -78,7 +78,7 @@ R studio was chosen to host all front and back end operations due to its flexibi
 The following R packages were installed for data wrangling and subsequent analysis steps. The following table lists a detailed description of each R package.
 
 | **Package**                                                             | **Description**                                                           |
-|---------------------|---------------------------------------------------|
+|-------------------------------------------------------------------------|---------------------------------------------------------------------------|
 | [maptools](https://cran.r-project.org/package=maptools)                 | For ease of manipulation of geographic data                               |
 | [sf](https://cran.r-project.org/package=sf)                             | For access, storage and manipulation of simple features data types        |
 | [sp](https://cran.r-project.org/package=sp)                             | Provides classes and methods for spatial data                             |
@@ -135,7 +135,7 @@ The null and alternative hypothesis will be the same as that for G function take
 The following R packages were installed for data wrangling and subsequent analysis steps. The following table lists a detailed description of each R package.
 
 | Package                                                                             | Description                                                                                                                                                                                                  |
-|-------------------|-----------------------------------------------------|
+|-------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [sp](https://cran.r-project.org/web/packages/sp/index.html)                         | Provides classes and methods for spatial data                                                                                                                                                                |
 | [sf](https://cran.r-project.org/web/packages/sf/index.html)                         | For access, storage and manipulation of simple features data types                                                                                                                                           |
 | [spNetwork](https://cran.rstudio.com/web/packages/spNetwork/index.html)             | Provides functions to perform Spatial Point Patterns Analysis such as kernel density estimation (KDE) and K-function on network.                                                                             |
@@ -166,7 +166,7 @@ Next, the nkde function was used to calculate Network Constrained Kernel Density
 The visualisation is then created to visualise the densities of the listings and networks that has relatively higher listings by using the tmap library, the visualisation is shown as below
 
 |                 |                                        |                                                    |
-|-------------|------------------------------|-----------------------------|
+|-----------------|----------------------------------------|----------------------------------------------------|
 |                 | **Before Covid**                       | **After Covid**                                    |
 | **ShiJingShan** | ![](image/shijingshan_beforecovid.png) | ![](image/shijingshan_aftercovid.png){width="967"} |
 | **HaiDian**     | ![](image/haidian_beforecovid.png)     | ![](image/haidian_aftercovid.png)                  |

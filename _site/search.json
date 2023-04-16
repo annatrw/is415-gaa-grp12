@@ -158,7 +158,7 @@
     "href": "user_guide/user_guide.html#kernal-density-estimation",
     "title": "User Guide for R Shiny application",
     "section": "Kernal Density Estimation",
-    "text": "Kernal Density Estimation\nIn the Spatial Points Pattern Analysis tab, please wait for a few minutes for the application and graphs to load. You should be able to see a Spatial Points Map showing the Raster Density Map of the airbnb listings in Beijing before the covid, you could also see the Map for after the covid by clicking on the dropdown box under 'Before or After Covid'\nYou could configure your own analysis by setting or adjusting the following parameters:\n\nDistrict ( to select which district you would like to focus on for analysis)\nKernel smoothing method (choose from Gaussian, Epanechnikov, Quartic, Disc)"
+    "text": "Kernal Density Estimation\nIn the Spatial Points Pattern Analysis tab, please wait for a few minutes for the application and graphs to load. You should be able to see a Spatial Points Map showing the Raster Density Map of the airbnb listings in Beijing before the covid, you could also see the Map for after the covid by clicking on the dropdown box under ‘Before or After Covid’\nYou could configure your own analysis by setting or adjusting the following parameters:\n\nDistrict ( to select which district you would like to focus on for analysis)\nKernel smoothing method (choose from Gaussian, Epanechnikov, Quartic, Disc)"
   },
   {
     "objectID": "user_guide/user_guide.html#g-function",

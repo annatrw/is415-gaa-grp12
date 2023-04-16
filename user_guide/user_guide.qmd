@@ -32,7 +32,7 @@ Our sub tab includes the following as shown below:
 
 ## Kernal Density Estimation
 
-In the Spatial Points Pattern Analysis tab, please wait for a few minutes for the application and graphs to load. You should be able to see a Spatial Points Map showing the Raster Density Map of the airbnb listings in Beijing before the covid, you could also see the Map for after the covid by clicking on the dropdown box under \'**Before or After Covid**\'
+In the Spatial Points Pattern Analysis tab, please wait for a few minutes for the application and graphs to load. You should be able to see a Spatial Points Map showing the Raster Density Map of the airbnb listings in Beijing before the covid, you could also see the Map for after the covid by clicking on the dropdown box under '**Before or After Covid**'
 
 You could configure your own analysis by setting or adjusting the following parameters:
 
@@ -64,7 +64,7 @@ Under the L-function tab, you can visualise the spatial distribution of the poin
 
 ![](image/Network_KDE.jpg)
 
-In the Network Constrained SPPA tab, please wait for a few minutes for the application to load. You should be able to see a Network Constrained KDE Map of the Airbnb listings in Shijingshan District on the Shijingshan Road network before the Covid, you could also see the Map for after the Covid by clicking on the dropdown box under \'Before or After Covid\'.
+In the Network Constrained SPPA tab, please wait for a few minutes for the application to load. You should be able to see a Network Constrained KDE Map of the Airbnb listings in Shijingshan District on the Shijingshan Road network before the Covid, you could also see the Map for after the Covid by clicking on the dropdown box under 'Before or After Covid'.
 
 You could configure your own analysis by setting or adjusting the following parameters:
 
