@@ -1,0 +1,629 @@
+---
+title: "Network Constrained SPPA"
+date-modified: "`r Sys.Date()`"
+format: html
+execute: 
+  message: true 
+  warning: false
+editor: visual
+---
+
+## Import packages
+
+```{r}
+pacman::p_load(sp, sf, spNetwork, tmap,tidyverse,spatstat,raster,maptools,kableExtra,plotly,ggthemes,onemapsgapi,devtools,rgdal)
+```
+
+## Data
+
+### Geospatial Data
+
+#### Import Data
+
+```{r}
+beijing_sf <- st_read("data/Geospatial/beijing.geojson") %>%
+  st_transform(crs=4555)
+```
+
+#### Select Column for Analysis
+
+```{r}
+beijing_sf <- select(beijing_sf, neighbourhood, geometry)
+beijing_sf
+```
+
+#### Check CRS Again
+
+```{r}
+st_crs(beijing_sf)
+```
+
+#### Check if there is invalid geometry
+
+```{r}
+length(which(st_is_valid(beijing_sf ) == FALSE))
+```
+
+#### Check Missing Value
+
+```{r}
+beijing_sf[rowSums(is.na(beijing_sf))!=0,]
+```
+
+### Aspatial Data
+
+```{r}
+beforecovid <- read_csv("data/aspatial/beijing_beforecovid.csv")
+```
+
+```{r}
+aftercovid <- read_csv("data/aspatial/beijing_aftercovid.csv")
+```
+
+#### Select Column for Analysis
+
+```{r}
+beforecovid <- subset(beforecovid, select=c(id, street,neighbourhood_cleansed,latitude, longitude))
+```
+
+```{r}
+aftercovid <- subset(aftercovid, select=c(id,neighbourhood,latitude, longitude))
+```
+
+#### Check Missing Value
+
+```{r}
+sum(is.na(beforecovid$latitude))
+```
+
+```{r}
+sum(is.na(aftercovid$latitude))
+```
+
+```{r}
+sum(is.na(beforecovid$longitude))
+```
+
+```{r}
+sum(is.na(aftercovid$longitude))
+```
+
+### Visualize the listings
+
+```{r}
+beforecovid_sf <- 
+
+st_as_sf(beforecovid, 
+                          # our coordinates are the longitude and latitude
+                          coords = c("longitude", 
+                                     "latitude"), 
+                          # the geographical features are in longitude & latitude, in decimals
+                          # as such, WGS84 is the most appropriate coordinates system
+                          crs = 4326) %>%st_transform(crs=4555)
+  #afterwards, we transform it to SVY21, our desired CRS
+  
+```
+
+```{r}
+aftercovid_sf <- st_as_sf(aftercovid, 
+                          # our coordinates are the longitude and latitude
+                          coords = c("longitude", 
+                                     "latitude"), 
+                          # the geographical features are in longitude & latitude, in decimals
+                          # as such, WGS84 is the most appropriate coordinates system
+                          crs = 4326) %>% st_transform(crs=4555)
+```
+
+#### The listing before covid
+
+```{r}
+tmap_mode("plot")+
+  qtm(beijing_sf) +
+  tm_shape(beforecovid_sf)+
+  tm_dots()
+```
+
+We could notice that there are quite a lot of listings locate at the central area of Beijing
+
+#### The listing after covid
+
+```{r}
+tmap_mode("plot")+
+  qtm(beijing_sf) +
+  tm_shape(aftercovid_sf)+
+  tm_dots()
+```
+
+After covid, the listings has reduced significantly
+
+## Network Analysis of Road
+
+### Import the Road Data of Beijing and name it as 'network'
+
+```{r}
+network <- st_read(dsn="data/Geospatial/Network/shape",
+                   layer="roads")%>% 
+  st_transform(crs=4555)%>% filter(type %in% c("residential", "footway","path"))
+```
+
+```{r}
+network_sf <- select(network,osm_id,type, geometry)
+network_sf
+```
+
+### Check the CRS
+
+```{r}
+st_crs(network_sf)
+```
+
+### Check invalid geometry and missing value
+
+```{r}
+length(which(st_is_valid(network_sf) == FALSE))
+```
+
+```{r}
+network_sf[rowSums(is.na(network_sf))!=0,]
+```
+
+### Focus on Three Study Area
+
+### 1. Shijingshan District(石景山区)
+
+```{r}
+shijingshan_sf <- beijing_sf %>% filter(neighbourhood == "石景山区")
+```
+
+```{r}
+plot(shijingshan_sf)
+```
+
+#### Only select the road that within Shijingshan District
+
+```{r}
+network_shijingshan <- subset(network_sf, lengths(st_intersects(network_sf, shijingshan_sf))!=0,)
+```
+
+#### Only Select the listings that within Shijingshan District
+
+```{r}
+shijingshan_beforecovidlisting <- subset(beforecovid_sf, lengths(st_intersects(beforecovid_sf, shijingshan_sf))!=0,)
+shijingshan_aftercovidlisting <- subset(aftercovid_sf, lengths(st_intersects(aftercovid_sf, shijingshan_sf))!=0,)
+```
+
+#### Visualize the Listings and the Network in Shijingshan Before Covid
+
+```{r}
+tmap_mode("plot")
+tm_shape(shijingshan_sf) +
+  tm_polygons() +
+tm_shape(network_shijingshan) +
+  tm_lines() +
+tm_shape(shijingshan_beforecovidlisting) +
+  tm_dots(size = 0.01,
+          col = "blue",
+          border.col="black",
+          border.lwd=0.5)
+```
+
+#### Visualize the Listings and the Network in Shijingshan After Covid
+
+```{r}
+tmap_mode("plot")
+tm_shape(shijingshan_sf) +
+  tm_polygons() +
+tm_shape(network_shijingshan) +
+  tm_lines() +
+tm_shape(shijingshan_aftercovidlisting) +
+  tm_dots(size = 0.01,
+          col = "blue",
+          border.col="black",
+          border.lwd=0.5)
+```
+
+#### Assign CRS
+
+```{r}
+crs <- "+proj=utm +zone=50 +datum=WGS84 +units=m +no_defs"
+network_shijingshan<- st_transform(network_shijingshan, crs)
+shijingshan_beforecovidlisting<- st_transform(shijingshan_beforecovidlisting, crs)
+shijingshan_aftercovidlisting<- st_transform(shijingshan_aftercovidlisting, crs)
+```
+
+#### Network Constrained KDE (NetKDE) Analysis
+
+#### Preparing the lixels objects
+
+Before computing NetKDE, the SpatialLines object need to be cut into lixels with a specified minimal distance
+
+```{r}
+lixels <- lixelize_lines(network_shijingshan, 
+                         700, 
+                         mindist = 350)
+```
+
+#### Generating line centre points
+
+Next, lines_center() of spNetwork will be used to generate a SpatialPointsDataFrame (i.e. samples) with line centre points as shown in the code chunk below.
+
+```{r}
+samples <- lines_center(lixels)
+```
+
+#### Performing NetKDE for Beijing Before Covid
+
+```{r}
+densities <- nkde(network_shijingshan, 
+                  events = shijingshan_beforecovidlisting,
+                  w = rep(1,nrow(shijingshan_beforecovidlisting)),
+                  samples = samples,
+                  kernel_name = "quartic",
+                  bw = 300, 
+                  div= "bw", 
+                  method = "simple", 
+                  digits = 1, 
+                  tol = 1,
+                  grid_shape = c(1,1), 
+                  max_depth = 8,
+                  agg = 10,
+                  sparse = TRUE,
+                  verbose = FALSE)
+```
+
+```{r}
+samples$density <- densities
+lixels$density <- densities
+```
+
+```{r}
+samples$density <- samples$density*1000
+lixels$density <- lixels$density*1000
+```
+
+```{r}
+tmap_mode('view')
+tm_shape(lixels)+
+  tm_lines(col="density")+
+tm_shape(shijingshan_beforecovidlisting)+
+  tm_dots()
+```
+
+Network Constrained G- and K-Function Analysis
+
+#### Performing NetKDE for Beijing After Covid
+
+```{r}
+densities1 <- nkde(network_shijingshan, 
+                  events = shijingshan_aftercovidlisting,
+                  w = rep(1,nrow(shijingshan_aftercovidlisting)),
+                  samples = samples,
+                  kernel_name = "quartic",
+                  bw = 300, 
+                  div= "bw", 
+                  method = "simple", 
+                  digits = 1, 
+                  tol = 1,
+                  grid_shape = c(1,1), 
+                  max_depth = 8,
+                  agg =10,
+                  sparse = TRUE,
+                  verbose = FALSE)
+```
+
+```{r}
+samples$density_after <- densities1
+lixels$density_after<- densities1
+samples$density_after <- samples$density_after*1000
+lixels$density_after <- lixels$density_after*1000
+```
+
+```{r}
+tmap_mode('view')
+tm_shape(lixels)+
+  tm_lines(col="density_after")+
+tm_shape(shijingshan_aftercovidlisting)+
+  tm_dots()
+```
+
+### 2. Haidian 海淀
+
+```{r}
+haidian_sf <- beijing_sf %>% filter(neighbourhood == "海淀区")%>%
+  st_transform(crs=4555)
+```
+
+```{r}
+plot(haidian_sf)
+```
+
+#### Only select the road that within Haidian District
+
+```{r}
+network_haidian <- subset(network_sf, lengths(st_intersects(network_sf, haidian_sf  ))!=0,)%>%
+  st_transform(crs=4555)
+```
+
+```{r}
+haidian_beforecovidlisting <- subset(beforecovid_sf, lengths(st_intersects(beforecovid_sf, haidian_sf))!=0,) %>%
+  st_transform(crs=4555)
+haidian_aftercovidlisting <- subset(aftercovid_sf, lengths(st_intersects(aftercovid_sf, haidian_sf))!=0,)%>%
+  st_transform(crs=4555)
+```
+
+#### Visualize the Listings and the Network in Haidian Before Covid
+
+```{r}
+tmap_mode("plot")
+tm_shape(haidian_sf) +
+  tm_polygons() +
+tm_shape(network_haidian) +
+  tm_lines() +
+tm_shape(haidian_beforecovidlisting) +
+  tm_dots(size = 0.01,
+          col = "blue",
+          border.col="black",
+          border.lwd=0.5)
+```
+
+#### Visualize the Listings and the Network in Haidian After Covid
+
+```{r}
+tmap_mode("plot")
+tm_shape(haidian_sf) +
+  tm_polygons() +
+tm_shape(network_haidian) +
+  tm_lines() +
+tm_shape(haidian_aftercovidlisting) +
+  tm_dots(size = 0.01,
+          col = "blue",
+          border.col="black",
+          border.lwd=0.5)
+```
+
+```{r}
+crs <- "+proj=utm +zone=50 +datum=WGS84 +units=m +no_defs"
+network_haidian<- st_transform(network_haidian, crs)
+haidian_beforecovidlisting<- st_transform(haidian_beforecovidlisting, crs)
+haidian_aftercovidlisting<- st_transform(haidian_aftercovidlisting, crs)
+```
+
+#### Network Constrained KDE (NetKDE) Analysis
+
+```{r}
+lixels_haidian <- lixelize_lines(network_haidian, 
+                         700, 
+                         mindist = 350)
+```
+
+```{r}
+samples_haidian <- lines_center(lixels_haidian)
+```
+
+```{r}
+samples_haidian<- st_transform(samples_haidian, crs)
+```
+
+```{r}
+densities_haidian <- nkde(network_haidian, 
+                  events = haidian_beforecovidlisting,
+                  w = rep(1,nrow(haidian_beforecovidlisting)),
+                  samples = samples_haidian,
+                  kernel_name = "quartic",
+                  bw = 300, 
+                  div= "bw", 
+                  method = "simple", 
+                  digits = 1, 
+                  tol = 1,
+                  grid_shape = c(1,1), 
+                  max_depth = 8,
+                  agg = 10,
+                  sparse = TRUE,
+                  verbose = FALSE)
+```
+
+```{r}
+samples_haidian$density <- densities_haidian
+lixels_haidian$density <- densities_haidian
+
+```
+
+```{r}
+samples_haidian$density <- samples_haidian$density*1000
+lixels_haidian$density <- lixels_haidian$density*1000
+```
+
+The listings before covid
+
+```{r}
+tmap_mode('view')
+tm_shape(lixels_haidian)+
+  tm_lines(col="density")+
+tm_shape(haidian_beforecovidlisting)+
+  tm_dots()
+```
+
+After Covid Visualization
+
+```{r}
+densities_haidian <- nkde(network_haidian, 
+                  events = haidian_aftercovidlisting,
+                  w = rep(1,nrow(haidian_aftercovidlisting)),
+                  samples = samples_haidian,
+                  kernel_name = "quartic",
+                  bw = 300, 
+                  div= "bw", 
+                  method = "simple", 
+                  digits = 1, 
+                  tol = 1,
+                  grid_shape = c(1,1), 
+                  max_depth = 8,
+                  agg = 10,
+                  sparse = TRUE,
+                  verbose = FALSE)
+```
+
+```{r}
+samples_haidian$density_after <- densities_haidian
+lixels_haidian$density_after <- densities_haidian
+samples_haidian$density_after <- samples_haidian$density_after*1000
+lixels_haidian$density_after <- lixels_haidian$density_after*1000
+```
+
+```{r}
+tmap_mode('view')
+tm_shape(lixels_haidian)+
+  tm_lines(col="density")+
+tm_shape(haidian_aftercovidlisting)+
+  tm_dots()
+```
+
+### FENGTAI 丰台
+
+```{r}
+fengtai_sf <- beijing_sf %>% filter(neighbourhood == "丰台区 / Fengtai")%>%
+  st_transform(crs=4555)
+plot(fengtai_sf)
+```
+
+```{r}
+network_fengtai <- subset(network_sf, lengths(st_intersects(network_sf, fengtai_sf  ))!=0,)%>%
+  st_transform(crs=4555)
+plot(network_fengtai)
+```
+
+#### Only select the road that within Fengtai District
+
+```{r}
+fengtai_beforecovidlisting <- subset(beforecovid_sf, lengths(st_intersects(beforecovid_sf, fengtai_sf))!=0,) %>%
+  st_transform(crs=4555)
+fengtai_aftercovidlisting <- subset(aftercovid_sf, lengths(st_intersects(aftercovid_sf, fengtai_sf))!=0,)%>%
+  st_transform(crs=4555)
+```
+
+#### Visualize the Listings and the Network in Haidian Before Covid
+
+```{r}
+tmap_mode("plot")
+tm_shape(fengtai_sf) +
+  tm_polygons() +
+tm_shape(network_fengtai) +
+  tm_lines() +
+tm_shape(fengtai_beforecovidlisting) +
+  tm_dots(size = 0.01,
+          col = "blue",
+          border.col="black",
+          border.lwd=0.5)
+```
+
+#### Visualize the Listings and the Network in Haidian Before Covid
+
+```{r}
+tmap_mode("plot")
+tm_shape(fengtai_sf) +
+  tm_polygons() +
+tm_shape(network_fengtai) +
+  tm_lines() +
+tm_shape(fengtai_aftercovidlisting) +
+  tm_dots(size = 0.01,
+          col = "blue",
+          border.col="black",
+          border.lwd=0.5)
+```
+
+#### Network Constrained KDE (NetKDE) Analysis
+
+Preparing the lixels objects
+
+```{r}
+crs <- "+proj=utm +zone=50 +datum=WGS84 +units=m +no_defs"
+network_fengtai<- st_transform(network_fengtai, crs)
+fengtai_beforecovidlisting<- st_transform(fengtai_beforecovidlisting, crs)
+fengtai_aftercovidlisting<- st_transform(fengtai_aftercovidlisting, crs)
+```
+
+```{r}
+lixels_fengtai <- lixelize_lines(network_fengtai, 
+                         700, 
+                         mindist = 350)
+```
+
+```{r}
+samples_fengtai <- lines_center(lixels_fengtai)
+```
+
+```{r}
+densities_fengtai <- nkde(network_fengtai, 
+                  events = fengtai_beforecovidlisting,
+                  w = rep(1,nrow(fengtai_beforecovidlisting)),
+                  samples = samples_fengtai,
+                  kernel_name = "quartic",
+                  bw = 300, 
+                  div= "bw", 
+                  method = "simple", 
+                  digits = 1, 
+                  tol = 1,
+                  grid_shape = c(1,1), 
+                  max_depth = 8,
+                  agg = 10,
+                  sparse = TRUE,
+                  verbose = FALSE)
+```
+
+```{r}
+samples_fengtai$density <- densities_fengtai
+lixels_fengtai$density <- densities_fengtai
+samples_fengtai$density <- samples_fengtai$density*1000
+lixels_fengtai$density <- lixels_fengtai$density*1000
+```
+
+```{r}
+tmap_mode('view')
+tm_shape(lixels_fengtai)+
+  tm_lines(col="density")+
+tm_shape(fengtai_beforecovidlisting)+
+  tm_dots()
+```
+
+After covid
+
+```{r}
+densities_fengtai_after <- nkde(network_fengtai, 
+                  events = fengtai_aftercovidlisting,
+                  w = rep(1,nrow(fengtai_aftercovidlisting)),
+                  samples = samples_fengtai,
+                  kernel_name = "quartic",
+                  bw = 300, 
+                  div= "bw", 
+                  method = "simple", 
+                  digits = 1, 
+                  tol = 1,
+                  grid_shape = c(1,1), 
+                  max_depth = 8,
+                  agg = 10,
+                  sparse = TRUE,
+                  verbose = FALSE)
+```
+
+```{r}
+samples_fengtai$density_after <- densities_fengtai_after
+lixels_fengtai$density_after <- densities_fengtai_after
+samples_fengtai$density_after <- samples_fengtai$density_after*1000
+lixels_fengtai$density_after <- lixels_fengtai$density_after*1000
+```
+
+```{r}
+tmap_mode('view')
+tm_shape(lixels_fengtai)+
+  tm_lines(col="density_after")+
+tm_shape(fengtai_aftercovidlisting)+
+  tm_dots()
+```
+
+The graphs reveal that road segments (darker orange color) are the part of network with relatively higher density of the listings. Those roads are located at/near the edge of the district The patterns are applicable to all of the three districts (Shijingshan, Fengtai, Haidian)
+
+We could observe that the dense central area has been affected the most, the regions that remain unaffected are located at the edge of the district, showing that the lockdown measures has greatly impact the most of listings, especially those in the center of the Beijing where more tourists attraction are located, those areas are also the area with strict lockdown policy implementation
+
+**Insights Gained**
+
+The measures implemented to curb the spread of the pandemic had **significant geographical effects**. The closure or restricted access to public attractions, mostly located in central areas, greatly impacted the home-sharing and accommodation businesses like Airbnb. Risk management in the hospitality sector should be aware of changes in geographical spread of lodging facilities and consider how to strategise and optimise future locations of such facilities to better serve the needs of the market.

@@ -1,5 +1,0 @@
----
-title: "Network Constrained"
----
-
-doc for michelle to place network constrained

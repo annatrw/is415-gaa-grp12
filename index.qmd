@@ -1,17 +1,11 @@
 ---
-title: "is415-gaa-grp12"
+title: "IS415-GAA-Grp12"
 ---
 
-We are a group of students under Prof Kam, doing IS415 Geospatial Analytics and Applications AY2022-23 Semester 2.
+# **Spatial Point Pattern Analysis of Airbnb listings in Beijing: A pre and post COVID-19 comparison**
 
-import the data
+By Group 12: Anna Tseng, Lu Quanfang, Michelle Lee
 
-```{r}
-# run the code
-```
+This project is done as part of IS415 Geospatial Analytics and Applications AY2022-23 Semester 2, a module in Singapore Management University (SMU), under the guidance of Prof Kam Tin Seong.
 
-michelle's test... please work
-
-another test
-
-michelle test 4:43pm
+This project will create an application using R Shiny with two main types of analysis that compares Airbnb listings in Beijing before (2019) and after (2022) Covid: Spatial Point Pattern analysis and Network Constrained Spatial Point Pattern Analysis.

@@ -7,18 +7,19 @@ website:
     left:
     - text: "Analysis"
       menu:
-        - text: "Data Wrangling"
-          href: "analysis/Data/Data.html"
         - text: "Spatial Point Pattern Analysis"
           href: "analysis/SPPA/SPPA.html"
         - text: "Network Constrained SPPA"
           href: "analysis/Network-Constrained/Network-Constrained.html"
+        
+    - text: "Proposal"
+      href: "proposal/proposal.html"
+    - text: "Research Report"
+      href: "report/Research_Report.html"
     right:
       - href: index.qmd
         text: Home
-      - about.qmd
-      - text: "Proposal"
-        href: "proposal/proposal.html"
+        
       
 format:
   html:
