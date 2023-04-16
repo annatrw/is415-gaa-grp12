@@ -16,6 +16,8 @@ website:
       href: "proposal/proposal.html"
     - text: "Research Report"
       href: "report/Research_Report.html"
+    - text: "User Guide"
+      href: "user_guide/user_guide.html"
     right:
       - href: index.qmd
         text: Home

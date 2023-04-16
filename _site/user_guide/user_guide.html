@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.313">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>is415-gaa-grp12 - User Guide for R Shiny application</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">is415-gaa-grp12</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-analysis" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Analysis</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-analysis">    
+        <li>
+    <a class="dropdown-item" href="../analysis/SPPA/SPPA.html">
+ <span class="dropdown-text">Spatial Point Pattern Analysis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../analysis/Network-Constrained/Network-Constrained.html">
+ <span class="dropdown-text">Network Constrained SPPA</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../proposal/proposal.html">
+ <span class="menu-text">Proposal</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../report/Research_Report.html">
+ <span class="menu-text">Research Report</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="../user_guide/user_guide.html" aria-current="page">
+ <span class="menu-text">User Guide</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html">
+ <span class="menu-text">Home</span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#home-tab" id="toc-home-tab" class="nav-link active" data-scroll-target="#home-tab">Home Tab</a></li>
+  <li><a href="#spatial-point-pattern-analysis-sppa" id="toc-spatial-point-pattern-analysis-sppa" class="nav-link" data-scroll-target="#spatial-point-pattern-analysis-sppa">Spatial Point Pattern Analysis (SPPA)</a>
+  <ul class="collapse">
+  <li><a href="#kernal-density-estimation" id="toc-kernal-density-estimation" class="nav-link" data-scroll-target="#kernal-density-estimation">Kernal Density Estimation</a></li>
+  <li><a href="#g-function" id="toc-g-function" class="nav-link" data-scroll-target="#g-function">G function</a></li>
+  <li><a href="#l-function" id="toc-l-function" class="nav-link" data-scroll-target="#l-function">L function</a></li>
+  </ul></li>
+  <li><a href="#network-constrained-sppa" id="toc-network-constrained-sppa" class="nav-link" data-scroll-target="#network-constrained-sppa">Network Constrained SPPA</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">User Guide for R Shiny application</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">April 16, 2023</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<section id="home-tab" class="level1">
+<h1>Home Tab</h1>
+<p><img src="image/homepage.jpg" class="img-fluid"></p>
+<p>This is our home tab where you could have a quick understanding and overview of our project, what is about, motivation and the function available&nbsp;</p>
+</section>
+<section id="spatial-point-pattern-analysis-sppa" class="level1">
+<h1>Spatial Point Pattern Analysis (SPPA)</h1>
+<p>Our sub tab includes the following as shown below:</p>
+<ul>
+<li><p>Kernel Density Estimation Tab</p></li>
+<li><p>G - function&nbsp;</p></li>
+<li><p>L- function</p></li>
+</ul>
+<p><img src="image/SPPA_overview.png" class="img-fluid"></p>
+<section id="kernal-density-estimation" class="level2">
+<h2 class="anchored" data-anchor-id="kernal-density-estimation">Kernal Density Estimation</h2>
+<p>In the Spatial Points Pattern Analysis tab, please wait for a few minutes for the application and graphs to load. You should be able to see a Spatial Points Map showing the Raster Density Map of the airbnb listings in Beijing before the covid, you could also see the Map for after the covid by clicking on the dropdown box under '<strong>Before or After Covid</strong>'</p>
+<p>You could configure your own analysis by setting or adjusting the following parameters:</p>
+<ul>
+<li><p>District ( to select which district you would like to focus on for analysis)</p></li>
+<li><p>Kernel smoothing method (choose from Gaussian, Epanechnikov, Quartic, Disc)</p></li>
+</ul>
+</section>
+<section id="g-function" class="level2">
+<h2 class="anchored" data-anchor-id="g-function">G function</h2>
+<p><img src="image/SPPA_G.png" class="img-fluid"></p>
+<p>Under the G-function tab, you can visualise the spatial distribution of the point features&nbsp;as well as configure our own analysis by setting or adjusting the following parameters:</p>
+<ul>
+<li><p>District ( to select which district you would like to focus on for analysis)</p></li>
+<li><p>Number of simulations&nbsp;</p></li>
+</ul>
+</section>
+<section id="l-function" class="level2">
+<h2 class="anchored" data-anchor-id="l-function">L function</h2>
+<p><img src="image/SPPA_L.png" class="img-fluid"></p>
+<p>Under the L-function tab, you can visualise the spatial distribution of the point features as well as configure our own analysis by setting or adjusting the following parameters:</p>
+<ul>
+<li><p>District ( to select which district you would like to focus on for analysis)</p></li>
+<li><p>Number of simulations</p></li>
+</ul>
+</section>
+</section>
+<section id="network-constrained-sppa" class="level1">
+<h1>Network Constrained SPPA</h1>
+<p><img src="image/Network_KDE.jpg" class="img-fluid"></p>
+<p>In the Network Constrained SPPA tab, please wait for a few minutes for the application to load. You should be able to see a Network Constrained KDE Map of the Airbnb listings in Shijingshan District on the Shijingshan Road network before the Covid, you could also see the Map for after the Covid by clicking on the dropdown box under 'Before or After Covid'.</p>
+<p>You could configure your own analysis by setting or adjusting the following parameters:</p>
+<ul>
+<li><p>District ( to select which district you would like to focus on for analysis)</p></li>
+<li><p>Kernel smoothing method (choose from Gaussian, Epanechnikov, Quartic, Disc)</p></li>
+<li><p>Method to be used (Simple, Continuous, Discontinuous)&nbsp;</p></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
