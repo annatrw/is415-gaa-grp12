@@ -8,6 +8,10 @@ execute:
 editor: visual
 ---
 
+# User Guide to **Spatial Point Pattern Analysis of Airbnb listings in Beijing**
+
+Check out our R Shiny application [here](https://michellefaith.shinyapps.io/is415-grp12/)!
+
 # Home Tab
 
 ![](image/homepage.jpg)

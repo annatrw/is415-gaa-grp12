@@ -9,3 +9,5 @@ By Group 12: Anna Tseng, Lu Quanfang, Michelle Lee
 This project is done as part of IS415 Geospatial Analytics and Applications AY2022-23 Semester 2, a module in Singapore Management University (SMU), under the guidance of Prof Kam Tin Seong.
 
 This project will create an application using R Shiny with two main types of analysis that compares Airbnb listings in Beijing before (2019) and after (2022) Covid: Spatial Point Pattern analysis and Network Constrained Spatial Point Pattern Analysis.
+
+Check out our R Shiny application [here](https://michellefaith.shinyapps.io/is415-grp12/)!

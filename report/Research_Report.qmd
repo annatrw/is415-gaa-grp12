@@ -176,14 +176,6 @@ The visualisation helps to directly get an overview of the survival rates of Air
 
 \
 
-## R shiny Demonstration 
-
--   Analysis for particular district 
-
--   SPPA
-
--   NetSPPA
-
 ## Conclusion
 
 The measures implemented to curb the spread of the pandemic had significant geographical effects. The closure or restricted access to public attractions, mostly located in central areas, greatly impacted the home-sharing and accommodation businesses like Airbnb.  Risk management in the hospitality sector should be aware of changes in geographical spread of lodging facilities and consider how to strategise and optimise future locations of such facilities to better serve the needs of the market.
