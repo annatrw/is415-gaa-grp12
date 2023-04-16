@@ -119,7 +119,28 @@ ul.task-list li input[type="checkbox"] {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#spatial-point-pattern-analysis-of-airbnb-listings-in-beijing-a-pre-and-post-covid-19-comparison" id="toc-spatial-point-pattern-analysis-of-airbnb-listings-in-beijing-a-pre-and-post-covid-19-comparison" class="nav-link active" data-scroll-target="#spatial-point-pattern-analysis-of-airbnb-listings-in-beijing-a-pre-and-post-covid-19-comparison"><strong>Spatial Point Pattern Analysis of Airbnb listings in Beijing: A pre and post COVID-19 comparison</strong></a>
+  <ul class="collapse">
+  <li><a href="#abstract" id="toc-abstract" class="nav-link" data-scroll-target="#abstract">Abstract</a></li>
+  <li><a href="#introduction-and-problem" id="toc-introduction-and-problem" class="nav-link" data-scroll-target="#introduction-and-problem">Introduction and Problem</a></li>
+  <li><a href="#related-works" id="toc-related-works" class="nav-link" data-scroll-target="#related-works">Related works</a></li>
+  <li><a href="#motivation" id="toc-motivation" class="nav-link" data-scroll-target="#motivation">Motivation &nbsp;</a></li>
+  <li><a href="#methodology" id="toc-methodology" class="nav-link" data-scroll-target="#methodology">Methodology&nbsp;</a>
+  <ul class="collapse">
+  <li><a href="#data-sources" id="toc-data-sources" class="nav-link" data-scroll-target="#data-sources">Data sources&nbsp;</a></li>
+  <li><a href="#spatial-point-pattern-analysis-sppa" id="toc-spatial-point-pattern-analysis-sppa" class="nav-link" data-scroll-target="#spatial-point-pattern-analysis-sppa">Spatial Point Pattern Analysis (SPPA)</a></li>
+  <li><a href="#network-constrained-sppa" id="toc-network-constrained-sppa" class="nav-link" data-scroll-target="#network-constrained-sppa">Network Constrained SPPA</a></li>
+  </ul></li>
+  <li><a href="#r-shiny-demonstration" id="toc-r-shiny-demonstration" class="nav-link" data-scroll-target="#r-shiny-demonstration">R shiny Demonstration&nbsp;</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#future-work" id="toc-future-work" class="nav-link" data-scroll-target="#future-work">Future work</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -147,9 +168,274 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p>final report to be uploaded</p>
+<section id="spatial-point-pattern-analysis-of-airbnb-listings-in-beijing-a-pre-and-post-covid-19-comparison" class="level1">
+<h1><strong>Spatial Point Pattern Analysis of Airbnb listings in Beijing: A pre and post COVID-19 comparison</strong></h1>
+<section id="abstract" class="level2">
+<h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
+<p>This project aims to investigate the vulnerability of Airbnb, one of the world’s largest home-sharing companies, to the COVID-19 pandemic in Beijing, capital of China.Due to China’s<a href="https://www.voanews.com/a/what-is-china-s-zero-covid-policy-/6854291.html#:~:text=China's%20national%20zero%2DCOVID%20policy,neighborhoods%20or%20even%20entire%20cities.">strict zero-covid policy</a>, which aims to keep cases as close to zero as possible, it has implemented strict lockdowns that can extend to entire cities. As a result, Airbnb’s operations have been significantly impacted, particularly in China’s case. In this project, we will measure the vulnerability of Airbnb to the pandemic in Beijing by comparing pre-COVID and post-COVID listing data. To achieve this, Spatial Point Pattern Analysis (SPPA) and&nbsp; Network Constrained KDE (NetKDE) Analysis has been conducted to understand how the pandemic and the lockdown measures have affected Airbnb’s business model. The results highlight the significant geographical effects of measures implemented to curb the spread of the pandemic, including the closure or restricted access to public attractions, which are mostly located in central areas. This impact has greatly affected businesses in the hospitality sector, such as Airbnb. It also suggests that risk management in the hospitality sector should consider changes in the geographical spread of lodging facilities and how future locations can be strategized and optimised to better serve the needs of the market.<br>
+</p>
+</section>
+<section id="introduction-and-problem" class="level2">
+<h2 class="anchored" data-anchor-id="introduction-and-problem">Introduction and Problem</h2>
+<p>Airbnb is one of the world’s largest home-sharing companies that was founded in 2007 and has since grown to over<a href="https://news.airbnb.com/about-us/#:~:text=Airbnb%20was%20born%20in%202007,every%20country%20across%20the%20globe.">4 million hosts who welcome 1.4 billion</a> guest arrivals across the globe with over 6.6million active listings worldwide as of 2022. Its total company value grew from <a href="https://www-statista-com.libproxy.smu.edu.sg/statistics/339845/company-value-and-equity-funding-of-airbnb/">US$30 billion in 2016 to over US$100 billion</a> in 2021. Airbnb has achieved considerable global success with its short-term home-sharing business model, providing travellers with convenient and cost effective accommodation options.&nbsp;</p>
+<p>However, the COVID-19 pandemic has triggered an unprecedented crisis and economic recession in many industries across the world, particularly in tourism, air travel and high contact sectors. The pandemic has significantly impacted Airbnb’s operations, especially in countries that have implemented lockdown measures like China. The year-on-year change in monthly revenue of airbnb in China alone reached over <a href="https://www-statista-com.libproxy.smu.edu.sg/statistics/1110445/china-coronavirus-covid-19-pandemic-impact-on-airbnb-monthly-revenue-in-beijing/">-40% in march 2020</a>. China adopted a zero covid policy from 2019 to keep cases as close to 0 as possible. This meant imposing <a href="https://www.voanews.com/a/what-is-china-s-zero-covid-policy-/6854291.html#:~:text=China's%20national%20zero%2DCOVID%20policy,neighborhoods%20or%20even%20entire%20cities.">strict lockdowns</a> in major cities like wuhan, shanghai and beijing, mass testing and quarantining positive cases in government facilities. Apart from the supply chain disruptions, overloading of delivery services, access to healthcare and other key amenities, travel and tourism has significantly reduced.&nbsp;</p>
+<p>In this project, Beijing, as one of the world’s largest cities and a popular tourist destination in China, will be selected to measure the vulnerability of home-sharing businesses like Airbnb to the pandemic.</p>
+</section>
+<section id="related-works" class="level2">
+<h2 class="anchored" data-anchor-id="related-works">Related works</h2>
+<ol type="1">
+<li><p>“<a href="https://em-gis2017.github.io/files/1%20A%C2%A0Spatial%C2%A0Point%C2%A0Pattern%C2%A0Analysis%C2%A0of%C2%A0the%C2%A02003%C2%A0SARS%C2%A0Epidemic%C2%A0in%C2%A0Beijing.pdf">A Spatial Point Pattern Analysis of the 2003 SARS Epidemic in Beijing</a>” (Cao et.al., 2017)</p>
+<p>This study investigates the prevalence of SARS in China that was a widespread pandemic in 2003. Kernel estimation methods were used to derive the density distribution of SARS patients using data such as home address and incidence rate of infected patients. Ripley’s K function was used to visualise the clustering patterns of SARS infections and the influence of factors such as gender, contact history and presence of a medical facility was analysed. Results revealed the clustering of infected people decreased as distance from the city center increased and spatial clustering was strongest at 11 km distance.</p>
+<p>Similar analysis has potential to be conducted for the Covid-19 pandemic for deeper analysis of trends in the incidence of Covid cases and its impact on other amenities like Airbnb listings.</p></li>
+<li><p>“<a href="https://filipbiljecki.com/publications/2019_sdsc_airbnb_beijing.pdf">The Implementation of Big Data Analysis in Regulating Online Short-Term Rental Business: A Case of Airbnb in Beijing</a>” (Li &amp; Biljecki, 2019)</p>
+<p>This research investigates how Beijing’s Airbnb apartment locations are affecting housing prices in the region with the use of a machine learning model to analyse price sensitivity as a result of increasing airbnb activities in Beijing. It provides policy recommendations on regulating short-term rental businesses based on a neighbourhood’s price sensitivity.</p></li>
+<li><p>” <a href="https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2021GH000458">“Distance-Driven” Versus “Density-Driven”: Understanding the Role of “Source-Case” Distance and Gathering Places in the Localized Spatial Clustering of COVID-19—A Case Study of the Xinfadi Market, Beijing (China)</a>” (Zhang, 2021)</p>
+<p>This study investigates the socio-economic and demographic factors that influence spatial clustering of Covid-19 cases (“density-driven” methods) in Beijing from June to July 2020, as well as the effects of spatial distance between source and cases of local Covid infections (“distance-driven” methods). Analysis methods used included statistical analysis such as chi-squared tests, point pattern analysis such as the Ripley’s K function, spatial autocorrelation analysis and geographically weighted Poisson regression with spatial lag. Results found there was a significant trend of changing from a “distance-driven” to the “density-driven” diffusion mode of local Covid cases.</p></li>
+</ol>
+<p><br>
+Majority of current studies are looking at Airbnb listings from a price standpoint, and little geospatial research has been done on Airbnb listings in Beijing during Covid. We aim to offer a geospatial analysis perspective of Beijing’s Airbnb apartments that will reveal important geographical spatial patterns that can be considered in risk management solutions in the hospitality and tourism industry during a pandemic.</p>
+<p><br>
+</p>
+</section>
+<section id="motivation" class="level2">
+<h2 class="anchored" data-anchor-id="motivation">Motivation &nbsp;</h2>
+<p>By using Beijing as a case study, we seek to understand how the pandemic and the lockdown measures have affected Airbnb’s business model, its hosts, and its guests. We aim to look into:</p>
+<ul>
+<li><p>The survival rates of Airbnb accommodations by comparing the pre-Covid and post-Covid listing data of Airbnb in Beijing.</p></li>
+<li><p>How the economic performance of Airbnb facilities is impacted by their intra-city location, with a specific emphasis on the place-based effects</p></li>
+</ul>
+<p>The findings of this research will contribute to the existing literature on the sharing economy, pandemic resilience, and crisis management in the tourism industry, and inform policymakers and industry practitioners on the best practices for ensuring the sustainability and competitiveness of the sharing economy model in the post-pandemic era.</p>
+<p><br>
+</p>
+</section>
+<section id="methodology" class="level2">
+<h2 class="anchored" data-anchor-id="methodology">Methodology&nbsp;</h2>
+<section id="data-sources" class="level3">
+<h3 class="anchored" data-anchor-id="data-sources">Data sources&nbsp;</h3>
+<p>This project uses the following data sources</p>
+<ol type="1">
+<li><p>Airbnb listings before Covid in Beijing (2019): <a href="https://www.kaggle.com/datasets/merryyundi/airbnb-beijing-20190211" class="uri">https://www.kaggle.com/datasets/merryyundi/airbnb-beijing-20190211</a>&nbsp;&nbsp;</p></li>
+<li><p>Airbnb listings after Covid in Beijing (June 2022): <a href="http://insideairbnb.com/get-the-data" class="uri">http://insideairbnb.com/get-the-data</a>&nbsp;</p></li>
+<li><p>Beijing neighbourhoods:&nbsp; <a href="http://insideairbnb.com/get-the-data" class="uri">http://insideairbnb.com/get-the-data</a></p></li>
+<li><p>Beijing road network data: <a href="https://download.bbbike.org/osm/bbbike/Beijing/" class="uri">https://download.bbbike.org/osm/bbbike/Beijing/</a></p></li>
+</ol>
+<p>R studio was chosen to host all front and back end operations due to its flexibility and customisability needed for a targeted and specific spatial point pattern analysis application.&nbsp;</p>
+</section>
+<section id="spatial-point-pattern-analysis-sppa" class="level3">
+<h3 class="anchored" data-anchor-id="spatial-point-pattern-analysis-sppa">Spatial Point Pattern Analysis (SPPA)</h3>
+<section id="installing-relevant-r-packages" class="level4">
+<h4 class="anchored" data-anchor-id="installing-relevant-r-packages">Installing relevant R packages</h4>
+<p>The following R packages were installed for data wrangling and subsequent analysis steps. The following table lists a detailed description of each R package.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th><strong>Package</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://cran.r-project.org/package=maptools">maptools</a></td>
+<td>For ease of manipulation of geographic data&nbsp;</td>
+</tr>
+<tr class="even">
+<td><a href="https://cran.r-project.org/package=sf">sf</a></td>
+<td>For access, storage and manipulation of simple features data types</td>
+</tr>
+<tr class="odd">
+<td><a href="https://cran.r-project.org/package=sp">sp</a></td>
+<td>Provides classes and methods for spatial data&nbsp;</td>
+</tr>
+<tr class="even">
+<td><a href="https://cran.r-project.org/package=rgdal">rgdal</a></td>
+<td>Provides projection and transformation functionalities&nbsp;</td>
+</tr>
+<tr class="odd">
+<td><a href="https://cran.r-project.org/web/packages/raster/index.html">raster</a></td>
+<td>For analysing spatial data, generating raster maps from spatstat outputs&nbsp;</td>
+</tr>
+<tr class="even">
+<td><a href="https://cran.r-project.org/web/packages/tmap/index.html">tmap</a></td>
+<td>For creating cartographically accurate maps&nbsp;</td>
+</tr>
+<tr class="odd">
+<td><a href="https://www.tidyverse.org/packages/">tidyverse</a></td>
+<td>For manipulation of csv and tibble data types</td>
+</tr>
+<tr class="even">
+<td><a href="https://cran.r-project.org/web/packages/plotly/index.html">plotly</a></td>
+<td>Create interactive web graphics from ‘ggplot2’</td>
+</tr>
+<tr class="odd">
+<td><a href="https://cran.r-project.org/web/packages/spatstat/index.html">spatstat</a></td>
+<td>For various types of advanced spatial point pattern analysis&nbsp;</td>
+</tr>
+<tr class="even">
+<td><a href="https://www.r-project.org/nosvn/pandoc/devtools.html">devtools</a></td>
+<td>For ease of using R developmental environment&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="data-wrangling" class="level4">
+<h4 class="anchored" data-anchor-id="data-wrangling">Data Wrangling</h4>
+<p>This step is necessary as a data preparation step to import raw input data from csv files into R studio’s environment, data cleaning and setting standardised projection systems before actual analysis is performed. Upon importing the csv files, unnecessary columns are removed, a check for null values in latitude and longitude columns are done, and crs or projection systems are changed using the st_as_sf() function which sets the projection to EPSG 4555 for Beijing. Initial visualisation using tmap is performed to get an overview of the location of Airbnb listings before and after Covid in Beijing. Then removal of excess Airbnb listings falling outside of the Beijing study area is done to ensure an accurate scope.&nbsp;</p>
+<p>Data would have to be converted to ppp format from the spatstat package for subsequent analysis, therefore sf objects would need to be prepared using the following steps: conversion to sp - spatial point - object, conversion to ppp object, check the converted objects for duplicates and handle them using rjitter() that prevents the same point data from occupying the exact same geographic location. Lastly, the owin object can be created to restrict the study area to Beijing.&nbsp;</p>
+<p>This marks the end of the data preparation process and Kernel Density Estimation for First and Second order can be performed.</p>
+</section>
+<section id="first-order-sppa" class="level4">
+<h4 class="anchored" data-anchor-id="first-order-sppa">First Order SPPA</h4>
+<p>The first order spatial point pattern analysis uses Kernel Density Estimation (KDE) to derive and visualise the intensity of point processes in the study area and allows for comparison of the distribution of Airbnb listings before and after Covid in Beijing. It analyses how the <a href="https://mgimond.github.io/Spatial/chp11_0.html">distribution</a>and intensity of Airbnb listings could have been influenced by Covid and pandemic restrictions. KDE methods use a known density/ kernel function to <a href="https://rural-urban.eu/sites/default/files/02_Kernel%20Density%20Analysis_Budde.pdf">average</a> across observed data points to create a smooth approximation. It generates a grid and assigns a density value for points centered on that cell.</p>
+<p>Using the <a href="https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/density">density</a>() function from the base R package, bandwidth type ‘bw.diggle’ was chosen as it minimises the mean squared error of kernel smoothing estimators. Bw.diggle returns a smoothing parameter that adjusts the bandwidths of the kernels such that they have equal variance<a href="https://rdrr.io/cran/spatstat.core/man/bw.diggle.html">(Diggle, 2003, page 118</a>) and selects the optimum value to avoid over smoothening - masks the structure of the data - or under smoothening - yields a spiky and hard to interpret output (Fig 1).</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="image/KDE.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Fig 1: KDE bandwidths</figcaption><p></p>
+</figure>
+</div>
+<p>The ‘gaussian’ kernel type estimator was selected to generate the KDE maps of Beijing before and after Covid because the input data is univariate and the underlying distribution being estimated is also gaussian, hence according to Wand and Jones (1995) gaussian is the optimal estimator.&nbsp;</p>
+<p>First order analysis was performed on Beijing as a whole to enable users to have an overview of the distribution of intensity of listings before deep diving into the district level analysis in second order spatial point pattern analysis.</p>
+</section>
+<section id="second-order-sppa" class="level4">
+<h4 class="anchored" data-anchor-id="second-order-sppa">Second Order SPPA</h4>
+<p>Second order spatial point pattern analysis investigates the interaction effect between observations, in this context, the before and after Covid interaction effects on Airbnb listings. The G and L functions were performed for the following selected districts - Shi Jing Shan, Ping Gu and Shun Yi (石景山，平谷，顺义). These districts were selected based on their distance from central Beijing, where Shi Jing Shan is nearest central Beijing, followed by Shun Yi and Ping Gu. a district level analysis yields more insight into the distribution of spatial point patterns or Airbnb listings.</p>
+<section id="g-function" class="level5">
+<h5 class="anchored" data-anchor-id="g-function">G function</h5>
+<p>The G function - <a href="https://www.rdocumentation.org/packages/spatstat/versions/1.64-1/topics/Gest">Gest</a>() from the spatstat package - measures the distribution of distances from an arbitrary point to its nearest event which can reveal the clustering patterns of Airbnb listings and determine whether they are clustered, dispersed or random before and after Covid. Monte Carlo Complete Spatial Randomness (CSR) simulations were used to determine the minimum and maximum simulation envelopes at 95% confidence level, outside of which would mean that there is less than 5% chance that the spatial patterns are resulting from the simulations.&nbsp;</p>
+<p>The null hypothesis is that distributions of Airbnb before or after Covid are random at 95% confidence level. If the G(r) is above the upper envelope, the listings are said to be clustered. If the G(r) is below the lower envelope, listings are dispersed and spread out from one another. If the G(r) is within the envelopes, the distribution is random.</p>
+</section>
+<section id="l-function" class="level5">
+<h5 class="anchored" data-anchor-id="l-function">L function</h5>
+<p>The L function (Besag’s 1977) - using <a href="https://www.rdocumentation.org/packages/spatstat/versions/1.64-1/topics/Lest">Lest</a>() from spatstat package -&nbsp; for Second Order Spatial Point Pattern analysis is a normalised Ripley’s K function that allows easier interpretation of results as it transforms the K function output and displays the expected K values - denoted by a red dashed line - on the <a href="https://mgimond.github.io/Spatial/chp11_0.html#k-and-l-functions">horizontal</a> axis; lower values of r can be easily interpreted and compared to the expected value. It is calculated in the following formula (Fig 2).</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="image/Lformula.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Fig 2: L function formula</figcaption><p></p>
+</figure>
+</div>
+<p>Similarly, CSR tests were performed and 39 simulations were run on each of the districts before and after Covid at 5% confidence level. This number is derived from the <a href="https://www.rdocumentation.org/packages/spatstat/versions/1.64-1/topics/envelope">nsim</a> calculation where alpha is equal to 2 * nrank / (1 + nsim). Taking nrank default value of 1, nsim at 0.05 alpha value will be 39.</p>
+<p>The null and alternative hypothesis will be the same as that for G function taken at the same - 95% - confidence level. If the L(r) is above the upper envelope, the listings are said to be clustered. If the L(r) is below the lower envelope, listings are dispersed and spread out from one another. If the L(r) is within the envelopes, the distribution is random.</p>
+</section>
+</section>
+</section>
+<section id="network-constrained-sppa" class="level3">
+<h3 class="anchored" data-anchor-id="network-constrained-sppa">Network Constrained SPPA</h3>
+<p>The following R packages were installed for data wrangling and subsequent analysis steps. The following table lists a detailed description of each R package.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Package&nbsp;</th>
+<th>Description&nbsp;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://cran.r-project.org/web/packages/sp/index.html">sp</a></td>
+<td>Provides classes and methods for spatial data&nbsp;</td>
+</tr>
+<tr class="even">
+<td><a href="https://cran.r-project.org/web/packages/sf/index.html">sf</a></td>
+<td>For access, storage and manipulation of simple features data types</td>
+</tr>
+<tr class="odd">
+<td><a href="https://cran.rstudio.com/web/packages/spNetwork/index.html">spNetwork</a></td>
+<td>Provides functions to perform Spatial Point Patterns Analysis such as kernel density estimation (KDE) and K-function on network.&nbsp;</td>
+</tr>
+<tr class="even">
+<td><a href="https://cran.r-project.org/web/packages/tmap/vignettes/tmap-getstarted.html">tmap</a></td>
+<td>Provides functions for plotting cartographic quality static point patterns maps or interactive maps by using leaflet API.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://cran.r-project.org/web/packages/tidyverse/index.html">tidyverse</a></td>
+<td>For manipulation of csv and tibble data types</td>
+</tr>
+<tr class="even">
+<td><a href="https://cran.r-project.org/web/packages/rgdal/index.html">rgdal</a></td>
+<td>Provides bindings to the ‘Geospatial’ Data Abstraction Library (GDAL) (&gt;= 1.11.4) and access to projection/transformation operations from the PROJ library.&nbsp;</td>
+</tr>
+<tr class="odd">
+<td><a href="https://cran.r-project.org/web/packages/spatstat/index.html">spatstat</a></td>
+<td>Provides classes and methods for dealing with spatial data in R. In this exercise, it will be used to manage SpatialPointsDataFrame and SpatiaLlinesDataFrame, and for performing projection transformation.</td>
+</tr>
+<tr class="even">
+<td><a href="https://cran.r-project.org/web/packages/maptools/index.html">maptools</a></td>
+<td>For ease of manipulation of geographic data&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<section id="data-wrangling-1" class="level4">
+<h4 class="anchored" data-anchor-id="data-wrangling-1">Data Wrangling&nbsp;</h4>
+<p>Before conducting Network Constrained KDE Analysis, it is crucial to select necessary variables and conduct proper data-preprocessing steps.The data pre-processing includes importing geospatial data (Beijing.geojson) and aspatial data (beijing listings before and after covid ) and removing unnecessary columns. Then, function st_as_sf() is utilised to to convert them to simple features objects. After that the CRS is transformed and checked by using the st_transform() and st_set_crs() function for proper Coordinate Reference system. Followed by identifying if invalid geometry and missing values exist. For our data preprocessing, there is no invalid geometry and missing values, hence the cleaned data is ready for conduct Network Constrained KDE Analysis</p>
+</section>
+<section id="network-constrained-kernel-density-estimation" class="level4">
+<h4 class="anchored" data-anchor-id="network-constrained-kernel-density-estimation">Network Constrained Kernel Density Estimation</h4>
+<p>Network Constrained Kernel Density Estimation (KDE) is a spatial analysis technique for estimating the density of points (e.g., events, features, etc.) on a network, while taking into account the network structure and distance. In this project, it is used to understand the spatial distribution of events (Airbnb listings) on the Beijing road network.</p>
+<p>In order to conduct a comprehensive Network-Constrained KDE analysis, three specific districts were chosen to be the focus of the study: Shi Jing Shan, Hai Dian, and Feng Tai (石景山，海淀，丰台). These districts were selected due to their central location within Beijing and their availability of complete road network data.</p>
+<p>When conducting Network Constrained KDE (NetKDE) Analysis, it is important to confine the analysis within the districts. Hence, we have filtered out each district from Beijing geojson and only kept the listings and road network within the district boundaries by using subset() function. Then, visualisation for the listings and network status for each district is created for both before and after Covid period. Lastly, CRS are assigned again before reaching to the analysis stage.</p>
+</section>
+<section id="network-constrained-kde-netkde-analysis" class="level4">
+<h4 class="anchored" data-anchor-id="network-constrained-kde-netkde-analysis">Network Constrained KDE (NetKDE) Analysis</h4>
+<p>To compute NetKDE, the SpatialLines object needs to be divided into lixels with a specified minimum distance, which was accomplished by using the function lixelize_lines() from the <a href="https://cran.rstudio.com/web/packages/spNetwork/index.html">spNetwork</a> package,then lines_center() function from the spNetwork package was used to create a SpatialPointsDataFrame.&nbsp;</p>
+<p>Next, the nkde function was used to calculate Network Constrained Kernel Density Estimates (NetKDE) of the listings in each district:&nbsp; Shi Jing Shan, Hai Dian, and Feng Tai (石景山，海淀，丰台). The NetKDE is calculated using a quartic kernel with a bandwidth of 300 metres and the “simple” method, the quartic kernel is used as&nbsp; it provides a good balance between smoothness and responsiveness to local variations in the data. The “agg”&nbsp; parameter was set to 10 specifying that listings within a 10-meter radius should be aggregated to speed up the calculation. The resulting NetKDE is stored in the variable “densities’.</p>
+<p>The visualisation is then created to visualise the densities of the listings and networks that has relatively higher listings by using the tmap library, the visualisation is shown as below</p>
+<table class="table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 41%">
+<col style="width: 40%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td></td>
+<td><strong>Before Covid</strong></td>
+<td><strong>After Covid</strong></td>
+</tr>
+<tr class="even">
+<td><strong>ShiJingShan</strong></td>
+<td><img src="image/shijingshan_beforecovid.png" class="img-fluid"></td>
+<td><img src="image/shijingshan_aftercovid.png" class="img-fluid" width="967"></td>
+</tr>
+<tr class="odd">
+<td><strong>HaiDian</strong></td>
+<td><img src="image/haidian_beforecovid.png" class="img-fluid"></td>
+<td><img src="image/haidian_aftercovid.png" class="img-fluid"></td>
+</tr>
+<tr class="even">
+<td><strong>FengTai</strong></td>
+<td><img src="image/fengtai_beforecovid.png" class="img-fluid"></td>
+<td><img src="image/fengtai_aftercovid.png" class="img-fluid" width="1061"></td>
+</tr>
+</tbody>
+</table>
+<p>The visualisation helps to directly get an overview of the survival rates of Airbnb accommodations before and after Covid, from the application it could be observed that the network that has higher density of listings are located at the edge of the district, and the findings are applicable to all of the three districts selected.&nbsp;</p>
+<p><br>
+</p>
+</section>
+</section>
+</section>
+<section id="r-shiny-demonstration" class="level2">
+<h2 class="anchored" data-anchor-id="r-shiny-demonstration">R shiny Demonstration&nbsp;</h2>
+<ul>
+<li><p>Analysis for particular district&nbsp;</p></li>
+<li><p>SPPA</p></li>
+<li><p>NetSPPA</p></li>
+</ul>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>The measures implemented to curb the spread of the pandemic had significant geographical effects. The closure or restricted access to public attractions, mostly located in central areas, greatly impacted the home-sharing and accommodation businesses like Airbnb.&nbsp; Risk management in the hospitality sector should be aware of changes in geographical spread of lodging facilities and consider how to strategise and optimise future locations of such facilities to better serve the needs of the market.</p>
+<p><br>
+</p>
+</section>
+<section id="future-work" class="level2">
+<h2 class="anchored" data-anchor-id="future-work">Future work</h2>
+<p>This analysis can be extended to other popular cities for Airbnb listings like Sydney, South Korea and New York, to understand the vulnerability of Airbnb and other home-sharing businesses to the pandemic varies across different contexts. Moreover, exploring the impact of the pandemic on the demand for different types of Airbnb accommodations, such as entire apartments, shared rooms and hotel rooms or the nature of the listing (short-term/long term) is also meaningful for future research.</p>
+<p><br>
+</p>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
